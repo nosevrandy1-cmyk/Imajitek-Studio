@@ -1,7 +1,7 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import HeroAmbient from "@/components/islands/HeroAmbient";
 import HeroLauncher from "@/components/islands/HeroLauncher";
+import HeroCardsCarousel from "@/components/islands/HeroCardsCarousel";
 import CatalogBuilder from "@/components/islands/CatalogBuilder";
 import OrderHookSection from "@/components/islands/OrderHookSection";
 import FaqDrum from "@/components/islands/FaqDrum";
@@ -60,26 +60,41 @@ const homeStructuredData = JSON.stringify({
 >
   <script slot="head" type="application/ld+json" set:html={homeStructuredData} />
   <section class="hero-band">
-    <HeroAmbient client:load />
-    <div class="container hero">
-      <h1 class="hero-title">
-        Pembuatan web, desain grafis, dan <span class="hl">langganan software resmi</span>.
-      </h1>
-      <p class="hero-sub">
-        Kami melayani pembuatan website dan aplikasi web, jasa desain grafis untuk kebutuhan
-        korporat, UMKM, maupun personal, serta pengadaan langganan software kreatif dan AI resmi.
-      </p>
-      <div class="hero-ctas">
-        <a class="btn btn-nvidia" id="hero-inquire-btn" href="/hubungi">
-          <span>Minta Penawaran</span>
-          <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-            <use href="#ph-arrow-right"></use>
-          </svg>
-        </a>
-        <a class="btn btn-glass" href="#home-catalog">Lihat Katalog Software</a>
+    <div class="hero-frame">
+      <img
+        src="/images/hero-sky.webp"
+        alt=""
+        width="1600"
+        height="825"
+        fetchpriority="high"
+        decoding="async"
+        class="hero-sky-photo"
+        aria-hidden="true"
+      />
+      <div class="hero-sky-scrim" aria-hidden="true"></div>
+
+      <div class="container hero">
+        <h1 class="hero-title">
+          Pembuatan web, desain grafis, dan <span class="hl-sky">langganan software resmi</span>.
+        </h1>
+        <p class="hero-sub">
+          Kami melayani pembuatan website dan aplikasi web, jasa desain grafis untuk kebutuhan
+          korporat, UMKM, maupun personal, serta pengadaan langganan software kreatif dan AI resmi.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-hero-glass" href="#home-catalog">Lihat Katalog Software</a>
+          <a class="btn btn-hero-lime" id="hero-inquire-btn" href="/hubungi">
+            <span>Minta Penawaran</span>
+            <span class="cta-arrow-circle" aria-hidden="true">
+              <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+                <use href="#ph-arrow-up-right"></use>
+              </svg>
+            </span>
+          </a>
+        </div>
       </div>
 
-      <HeroLauncher client:load />
+      <HeroCardsCarousel client:load />
     </div>
   </section>
 
@@ -94,8 +109,12 @@ const homeStructuredData = JSON.stringify({
         </p>
       </div>
 
+      <div class="catalog-search-row">
+        <HeroLauncher client:load />
+      </div>
+
       <div class="catalog-unified-stack">
-        <CatalogBuilder client:visible />
+        <CatalogBuilder showMarquee={false} client:visible />
         <OrderHookSection client:visible />
       </div>
     </div>

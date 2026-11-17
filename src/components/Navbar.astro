@@ -10,18 +10,26 @@ const isContact = Astro.props.currentPath.startsWith("/hubungi");
 const waTarget = "/hubungi";
 ---
 
-<div class="nav-wrapper" id="nav-wrapper">
+<div class:list={["nav-wrapper", { "is-hero-notch": isHome }]} id="nav-wrapper">
   <header class="floating-nav">
-    <a class="brand" href="/" aria-label="Beranda Imajitek Studio">
-      <img
-        src="/logo-itb-green.png"
-        alt="Logo Imajitek Studio"
-        width="47"
-        height="24"
-        class="brand-logo"
-      />
-      <span>Imajitek Studio</span>
-    </a>
+    <div class="nav-ear nav-ear-left">
+      <a class="brand" href="/" aria-label="Beranda Imajitek Studio">
+        <img
+          src="/logo-itb-green.png"
+          alt="Logo Imajitek Studio"
+          width="47"
+          height="24"
+          class="brand-logo"
+        />
+        <span>Imajitek Studio</span>
+      </a>
+      <svg class="notch-wave notch-wave-left" viewBox="0 0 64 60" aria-hidden="true">
+        <path d="M-2,-2 H64 V0 C36,0 32,60 0,60 H-2 Z" fill="currentColor"></path>
+      </svg>
+      <svg class="notch-scoop notch-scoop-lb" viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M0,-2 H28 V0 A28,28 0 0,0 0,28 H-2 V-2 Z" fill="currentColor"></path>
+      </svg>
+    </div>
 
     <nav class="nav-links" id="nav-links" aria-label="Navigasi Utama">
       <a href="/" class:list={["nav-item-link", { "is-active": isHome }]}>Beranda</a>
@@ -196,28 +204,38 @@ const waTarget = "/hubungi";
       >
     </nav>
 
-    <div class="nav-actions">
-      <a
-        href={waTarget}
-        class="btn btn-nvidia btn-sm nav-cta-btn"
-        aria-label="Minta Penawaran"
-        title="Minta Penawaran"
-      >
-        <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-          <use href="#ph-arrow-right"></use>
-        </svg>
-        <span class="nav-cta-text">Minta Penawaran</span>
-      </a>
-      <button
-        type="button"
-        class="mobile-toggle"
-        id="mobile-toggle"
-        aria-label="Buka menu navigasi"
-        aria-expanded="false"
-        aria-controls="nav-links"
-      >
-        <svg class="ph-icon" aria-hidden="true"><use href="#ph-list"></use></svg>
-      </button>
+    <div class="nav-ear nav-ear-right">
+      <svg class="notch-wave notch-wave-right" viewBox="0 0 64 60" aria-hidden="true">
+        <path d="M66,-2 H0 V0 C28,0 32,60 64,60 H66 Z" fill="currentColor"></path>
+      </svg>
+      <svg class="notch-scoop notch-scoop-rb" viewBox="0 0 28 28" aria-hidden="true">
+        <path d="M30,-2 H0 V0 A28,28 0 0,1 28,28 H30 Z" fill="currentColor"></path>
+      </svg>
+      <div class="nav-actions">
+        <a
+          href={waTarget}
+          class="btn btn-nvidia btn-sm nav-cta-btn"
+          aria-label="Minta Penawaran"
+          title="Minta Penawaran"
+        >
+          <span class="nav-cta-text">Minta Penawaran</span>
+          <span class="nav-cta-arrow" aria-hidden="true">
+            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+              <use href="#ph-arrow-up-right"></use>
+            </svg>
+          </span>
+        </a>
+        <button
+          type="button"
+          class="mobile-toggle"
+          id="mobile-toggle"
+          aria-label="Buka menu navigasi"
+          aria-expanded="false"
+          aria-controls="nav-links"
+        >
+          <svg class="ph-icon" aria-hidden="true"><use href="#ph-list"></use></svg>
+        </button>
+      </div>
     </div>
   </header>
 </div>
@@ -229,8 +247,10 @@ const waTarget = "/hubungi";
   const dropdowns = document.querySelectorAll<HTMLElement>(".nav-dropdown");
   let closeTimer: number | undefined;
 
+  const isNotchPage = navWrapper?.classList.contains("is-hero-notch") ?? false;
   const updateNavOnScroll = () => {
-    navWrapper?.classList.toggle("is-scrolled", window.scrollY > 36);
+    const threshold = isNotchPage ? 56 : 36;
+    navWrapper?.classList.toggle("is-scrolled", window.scrollY > threshold);
   };
   window.addEventListener("scroll", updateNavOnScroll, { passive: true });
   updateNavOnScroll();
@@ -249,7 +269,7 @@ const waTarget = "/hubungi";
     btn?.addEventListener("click", (e) => {
       e.stopPropagation();
       const isOpen = dd.classList.contains("open");
-      if (window.innerWidth > 760 && isOpen && Date.now() - hoverOpenedAt < 400) {
+      if (window.innerWidth > 960 && isOpen && Date.now() - hoverOpenedAt < 400) {
         return;
       }
       const willOpen = !isOpen;
@@ -261,7 +281,7 @@ const waTarget = "/hubungi";
     });
 
     dd.addEventListener("mouseenter", () => {
-      if (window.innerWidth <= 760) return;
+      if (window.innerWidth <= 960) return;
       if (closeTimer) window.clearTimeout(closeTimer);
       const wasOpen = dd.classList.contains("open");
       closeAllDropdowns();
@@ -271,7 +291,7 @@ const waTarget = "/hubungi";
     });
 
     dd.addEventListener("mouseleave", () => {
-      if (window.innerWidth <= 760) return;
+      if (window.innerWidth <= 960) return;
       closeTimer = window.setTimeout(() => {
         dd.classList.remove("open");
         btn?.setAttribute("aria-expanded", "false");
