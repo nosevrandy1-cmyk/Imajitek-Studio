@@ -13,6 +13,7 @@ export interface PrefillInquiryDetail {
 declare global {
   interface Window {
     __imajitekPendingPrefill?: PrefillInquiryDetail;
+    __imajitekPendingCatalogPick?: string;
   }
 }
 
@@ -58,7 +59,34 @@ export function subscribeInquiryPrefill(
 
 export function dispatchCatalogPick(itemId: string): void {
   if (typeof window === "undefined") return;
+
+  window.__imajitekPendingCatalogPick = itemId;
   window.dispatchEvent(
     new CustomEvent<{ itemId: string }>(CATALOG_PICK_EVENT, { detail: { itemId } })
   );
+
+  const target = document.getElementById("home-catalog");
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+export function subscribeCatalogPick(handler: (itemId: string) => void): () => void {
+  if (typeof window === "undefined") return () => undefined;
+
+  if (window.__imajitekPendingCatalogPick) {
+    const pending = window.__imajitekPendingCatalogPick;
+    delete window.__imajitekPendingCatalogPick;
+    handler(pending);
+  }
+
+  const listener = (event: Event) => {
+    const custom = event as CustomEvent<{ itemId: string }>;
+    if (custom.detail?.itemId) {
+      delete window.__imajitekPendingCatalogPick;
+      handler(custom.detail.itemId);
+    }
+  };
+  window.addEventListener(CATALOG_PICK_EVENT, listener);
+  return () => window.removeEventListener(CATALOG_PICK_EVENT, listener);
 }

@@ -128,12 +128,12 @@ kbd {
 }
 
 .section {
-  padding: 58px 0;
+  padding: 78px 0;
   scroll-margin-top: 88px;
 }
 
 .section-compact {
-  padding: 0 0 64px;
+  padding: 0 0 76px;
 }
 
 .section-divider {
@@ -141,9 +141,9 @@ kbd {
 }
 
 .view-header {
-  padding: 110px 0 30px;
+  padding: 116px 0 34px;
   border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 36px;
+  margin-bottom: 40px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -170,27 +170,27 @@ kbd {
 }
 
 .view-header h1 {
-  margin: 0 0 10px;
-  font-size: clamp(28px, 4vw, 42px);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 1.12;
+  margin: 0 0 12px;
+  font-size: clamp(28px, 3.8vw, 40px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.14;
   color: var(--ink-primary);
   text-wrap: balance;
 }
 
 .view-header p {
   margin: 0;
-  max-width: 640px;
+  max-width: 620px;
   font-size: 16px;
   color: var(--ink-secondary);
-  line-height: 1.65;
+  line-height: 1.7;
   text-wrap: pretty;
 }
 
 .section-head {
-  max-width: 640px;
-  margin: 0 auto 32px;
+  max-width: 620px;
+  margin: 0 auto 40px;
   text-align: center;
 }
 
@@ -200,11 +200,11 @@ kbd {
 }
 
 .section-title {
-  margin: 0 0 8px;
-  font-size: clamp(24px, 3.2vw, 32px);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 1.18;
+  margin: 0 0 10px;
+  font-size: clamp(24px, 3vw, 31px);
+  font-weight: 700;
+  letter-spacing: -0.028em;
+  line-height: 1.2;
   color: var(--ink-primary);
   text-wrap: balance;
 }
@@ -213,7 +213,7 @@ kbd {
   margin: 0;
   font-size: 15.5px;
   color: var(--ink-secondary);
-  line-height: 1.65;
+  line-height: 1.7;
   text-wrap: pretty;
 }
 
@@ -278,16 +278,14 @@ kbd {
 }
 
 .btn-nvidia {
-  background: #76b900;
-  color: #0b1302;
-  border-color: #639c00;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.28),
-    0 1px 2px rgba(0, 0, 0, 0.08);
+  background: #467800;
+  color: #ffffff;
+  border-color: #3a6500;
+  box-shadow: 0 1px 2px rgba(16, 21, 15, 0.08);
 }
 
 .btn-nvidia:hover:not(:disabled) {
-  background: #6da900;
+  background: #3d6900;
 }
 
 .btn-glass {

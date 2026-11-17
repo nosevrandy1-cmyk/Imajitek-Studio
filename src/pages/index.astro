@@ -1,12 +1,10 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import HeroLauncher from "@/components/islands/HeroLauncher";
-import ServiceShowcase from "@/components/islands/ServiceShowcase";
 import CatalogBuilder from "@/components/islands/CatalogBuilder";
 import OrderHookSection from "@/components/islands/OrderHookSection";
 import FaqAccordion from "@/components/islands/FaqAccordion";
 import InquiryForm from "@/components/islands/InquiryForm";
-import { COMPANY } from "@/domain/catalog";
 ---
 
 <BaseLayout
@@ -35,18 +33,6 @@ import { COMPANY } from "@/domain/catalog";
     <HeroLauncher client:load />
   </section>
 
-  <section class="section">
-    <div class="section-head">
-      <h2 class="section-title">Pilih layanan yang ingin Anda eksplor</h2>
-      <p class="section-desc">
-        Klik salah satu fokus layanan di kiri untuk melihat detail hasil kerja kami, lalu tanyakan
-        langsung kebutuhannya.
-      </p>
-    </div>
-
-    <ServiceShowcase client:visible />
-  </section>
-
   <section class="section section-divider" id="home-catalog">
     <div class="section-head">
       <h2 class="section-title">Katalog software resmi &amp; layanan siap pesan</h2>
@@ -56,11 +42,10 @@ import { COMPANY } from "@/domain/catalog";
       </p>
     </div>
 
-    <CatalogBuilder mode="home" client:visible />
-  </section>
-
-  <section class="section-compact order-hook-band" id="home-order-hook">
-    <OrderHookSection client:visible />
+    <div class="catalog-unified-stack">
+      <CatalogBuilder mode="home" client:visible />
+      <OrderHookSection client:visible />
+    </div>
   </section>
 
   <section class="section section-divider" id="home-inquiry">
@@ -71,37 +56,6 @@ import { COMPANY } from "@/domain/catalog";
           <p class="section-desc">Klik pertanyaan untuk membuka detailnya.</p>
         </div>
         <FaqAccordion client:visible />
-
-        <div class="contact-direct-bar" aria-label="Kontak Langsung Imajitek Studio">
-          <a
-            class="contact-direct-pill"
-            href={COMPANY.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
-              <use href="#ph-whatsapp-logo"></use>
-            </svg>
-            <span>{COMPANY.whatsappDisplay}</span>
-          </a>
-          <a class="contact-direct-pill" href={`mailto:${COMPANY.email}`}>
-            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
-              <use href="#ph-envelope"></use>
-            </svg>
-            <span>{COMPANY.email}</span>
-          </a>
-          <a
-            class="contact-direct-pill"
-            href={COMPANY.mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
-              <use href="#ph-map-pin"></use>
-            </svg>
-            <span>{COMPANY.address}</span>
-          </a>
-        </div>
       </div>
 
       <InquiryForm variant="home" client:visible />

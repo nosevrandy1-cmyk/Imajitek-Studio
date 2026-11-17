@@ -31,7 +31,15 @@ import ScenariosSwitcher from "@/components/islands/ScenariosSwitcher";
   </div>
 
   <section class="section-compact">
-    <CatalogBuilder mode="contact" client:load />
+    <CatalogBuilder mode="contact" showMarquee={false} client:load />
+
+    <div class="section-head align-left" style="margin-top:52px;margin-bottom:20px;">
+      <h2 class="section-title">Contoh kombinasi paket untuk tim</h2>
+      <p class="section-desc">
+        Lihat skenario pengadaan lintas desain, AI, dan pengembangan web yang sering digabung dalam
+        satu tagihan.
+      </p>
+    </div>
     <ScenariosSwitcher client:visible />
   </section>
 </BaseLayout>
