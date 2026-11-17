@@ -10,7 +10,7 @@ import {
   type CatalogCategoryId
 } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
-import { dispatchInquiryPrefill } from "@/lib/events";
+import { dispatchInquiryPrefill, subscribeCatalogPick } from "@/lib/events";
 import {
   INITIAL_SELECTIONS,
   MAX_SEAT_QTY,
@@ -30,9 +30,10 @@ import {
 
 interface CatalogBuilderProps {
   mode: "home" | "contact";
+  showMarquee?: boolean;
 }
 
-export default function CatalogBuilder({ mode }: CatalogBuilderProps) {
+export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuilderProps) {
   const [activeCat, setActiveCat] = useState<CatalogCategoryId>("creative");
   const [selections, setSelections] = useState<CatalogSelection[]>(() => [...INITIAL_SELECTIONS]);
 
@@ -56,6 +57,15 @@ export default function CatalogBuilder({ mode }: CatalogBuilderProps) {
       }
       setSelections((prev) => addCatalogSelection(prev, pickParam));
     }
+  }, []);
+
+  useEffect(() => {
+    return subscribeCatalogPick((itemId) => {
+      const item = CATALOG_MAP.get(itemId);
+      if (!item) return;
+      setActiveCat(item.cat);
+      setSelections((prev) => addCatalogSelection(prev, itemId));
+    });
   }, []);
 
   const visibleItems = useMemo(
@@ -113,42 +123,44 @@ export default function CatalogBuilder({ mode }: CatalogBuilderProps) {
 
   return (
     <>
-      <div className="marquee-wrap" aria-label="Daftar Software dan Platform Resmi">
-        <div className="marquee-track">
-          {[...MARQUEE_TOP_ROW, ...MARQUEE_TOP_ROW].map((pill, index) => {
-            const picked = isSelected(selections, pill.id);
-            return (
-              <button
-                key={`top-${pill.id}-${index}`}
-                type="button"
-                className={`ext-pill ${picked ? "is-picked" : ""}`}
-                aria-pressed={picked}
-                onClick={() => handleMarqueeClick(pill.id)}
-              >
-                <SpriteIcon id={pill.icon} className="brand-svg" />
-                <span>{pill.label}</span>
-              </button>
-            );
-          })}
+      {showMarquee && (
+        <div className="marquee-wrap" aria-label="Daftar Software dan Platform Resmi">
+          <div className="marquee-track">
+            {[...MARQUEE_TOP_ROW, ...MARQUEE_TOP_ROW].map((pill, index) => {
+              const picked = isSelected(selections, pill.id);
+              return (
+                <button
+                  key={`top-${pill.id}-${index}`}
+                  type="button"
+                  className={`ext-pill ${picked ? "is-picked" : ""}`}
+                  aria-pressed={picked}
+                  onClick={() => handleMarqueeClick(pill.id)}
+                >
+                  <SpriteIcon id={pill.icon} className="brand-svg" />
+                  <span>{pill.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          <div className="marquee-track reverse">
+            {[...MARQUEE_BOTTOM_ROW, ...MARQUEE_BOTTOM_ROW].map((pill, index) => {
+              const picked = isSelected(selections, pill.id);
+              return (
+                <button
+                  key={`btm-${pill.id}-${index}`}
+                  type="button"
+                  className={`ext-pill ${picked ? "is-picked" : ""}`}
+                  aria-pressed={picked}
+                  onClick={() => handleMarqueeClick(pill.id)}
+                >
+                  <SpriteIcon id={pill.icon} className="brand-svg" />
+                  <span>{pill.label}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
-        <div className="marquee-track reverse">
-          {[...MARQUEE_BOTTOM_ROW, ...MARQUEE_BOTTOM_ROW].map((pill, index) => {
-            const picked = isSelected(selections, pill.id);
-            return (
-              <button
-                key={`btm-${pill.id}-${index}`}
-                type="button"
-                className={`ext-pill ${picked ? "is-picked" : ""}`}
-                aria-pressed={picked}
-                onClick={() => handleMarqueeClick(pill.id)}
-              >
-                <SpriteIcon id={pill.icon} className="brand-svg" />
-                <span>{pill.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      )}
 
       <div className="calculator-box">
         <div className="calc-controls">
