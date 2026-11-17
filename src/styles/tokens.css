@@ -23,11 +23,11 @@
   --ink-secondary: #525d4e;
   --ink-muted: #768272;
 
-  /* Brand Green Accent — restrained & high-contrast */
-  --nvidia: #569100;
-  --nvidia-bright: #67a800;
-  --nvidia-ink: #3c6800;
-  --nvidia-soft: rgba(103, 168, 0, 0.08);
+  /* Brand Lime Accent — anchored to #98ef1c */
+  --nvidia: #98ef1c;
+  --nvidia-bright: #a9fa2e;
+  --nvidia-ink: #2b4c00;
+  --nvidia-soft: rgba(152, 239, 28, 0.18);
 
   /* Semantic Status */
   --danger-ink: #b42318;
@@ -37,7 +37,7 @@
   /* Subtle hairline borders for calm breathing room */
   --border-subtle: rgba(16, 21, 15, 0.065);
   --border-highlight: rgba(16, 21, 15, 0.12);
-  --border-nvidia: rgba(86, 145, 0, 0.34);
+  --border-nvidia: rgba(152, 239, 28, 0.72);
 
   --stage-bg: #f2f4ef;
   --stage-shadow: 0 16px 40px rgba(16, 21, 15, 0.055), 0 1px 3px rgba(16, 21, 15, 0.03);
