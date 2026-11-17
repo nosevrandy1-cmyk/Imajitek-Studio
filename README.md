@@ -38,19 +38,3 @@ pnpm install        # Pasang dependensi
 pnpm dev            # Jalankan server lokal Astro
 pnpm verify         # Jalankan typecheck + lint + format:check + vitest + astro build
 ```
-
-## Deploy ke Cloudflare Pages
-
-1. Hubungkan repositori GitHub ke **Cloudflare Dashboard → Workers & Pages → Create → Pages → Connect to Git**.
-2. Konfigurasi Build Settings:
-   - **Framework preset:** `Astro`
-   - **Build command:** `pnpm build`
-   - **Build output directory:** `dist`
-3. **Konfigurasi Email Form (`imajistudio.id@gmail.com`) & Anti-Spam Turnstile:**
-   - Tambahkan **Environment Variables / Secrets** di **Cloudflare Pages Dashboard → Settings → Environment variables**:
-     - `RESEND_API_KEY` — API key dari [Resend](https://resend.com/) agar setiap pengajuan form langsung masuk ke `imajistudio.id@gmail.com`.
-     - `TURNSTILE_SECRET_KEY` — Secret key **Cloudflare Turnstile** untuk verifikasi CAPTCHA di sisi edge.
-     - `PUBLIC_TURNSTILE_SITE_KEY` — Site key **Cloudflare Turnstile** untuk widget CAPTCHA pada formulir (bila belum diisi, formulir otomatis memakai tantangan verifikasi anti-spam bawaan + honeypot + guard kecepatan bot).
-     - `INQUIRY_TO_EMAIL` _(opsional)_ — Default mengarah ke `imajistudio.id@gmail.com`.
-     - `INQUIRY_FROM_EMAIL` _(opsional)_ — Alamat pengirim domain terverifikasi (default: `Imajitek Studio <onboarding@resend.dev>`).
-     - `INQUIRY_WEBHOOK_URL` _(opsional)_ — Webhook Slack / Discord / CRM tambahan.
