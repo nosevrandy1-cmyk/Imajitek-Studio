@@ -64,7 +64,7 @@ export default function HeroCardsCarousel() {
     let lastTs = performance.now();
 
     const layoutFrame = (now: number) => {
-      const dt = Math.min(0.05, Math.max(0, (now - lastTs) / 1000));
+      const dt = Math.min(0.033, Math.max(0, (now - lastTs) / 1000));
       lastTs = now;
 
       const stageWidth = stage.clientWidth || 1200;
@@ -80,28 +80,38 @@ export default function HeroCardsCarousel() {
 
       const halfStage = stageWidth * 0.5;
       const halfCard = cardW * 0.5;
+      const wrapShift = step * 2;
+      const fadeZone = isMobile ? 54 : 110;
 
       cardRefs.current.forEach((btn, idx) => {
         if (!btn) return;
-        let x = idx * step - offsetPx;
-        while (x < -step * 1.5) x += totalWidth;
-        while (x > totalWidth - step * 1.5) x -= totalWidth;
+        const raw = (idx * step - offsetPx + wrapShift) % totalWidth;
+        const x = (raw < 0 ? raw + totalWidth : raw) - wrapShift;
+
+        if (x < -cardW - 16 || x > stageWidth + 16) {
+          btn.style.visibility = "hidden";
+          btn.style.opacity = "0";
+          btn.style.pointerEvents = "none";
+          return;
+        }
 
         const cardCenter = x + halfCard;
         const dist = cardCenter - halfStage;
-        const norm = Math.max(-1.3, Math.min(1.3, dist / Math.max(halfStage * 0.92, 220)));
+        const norm = Math.max(-1.25, Math.min(1.25, dist / Math.max(halfStage * 0.92, 220)));
 
-        const rotateY = norm * (isMobile ? -13 : -21);
-        const arcDrop = norm * norm * (isMobile ? 14 : 26);
-        const depthZ = -(norm * norm) * (isMobile ? 22 : 48);
+        const rotateY = norm * (isMobile ? -12 : -20);
+        const arcDrop = norm * norm * (isMobile ? 14 : 24);
+        const depthZ = -(norm * norm) * (isMobile ? 18 : 42);
         const scale = 1 - Math.min(0.14, Math.abs(norm) * 0.08);
-        const opacity =
-          x < -cardW - 8 || x > stageWidth + 12
-            ? 0
-            : Math.max(0.12, 1 - Math.max(0, Math.abs(norm) - 0.86) * 2.2);
 
+        const leftAlpha = Math.min(1, Math.max(0, (cardCenter - 8) / fadeZone));
+        const rightAlpha = Math.min(1, Math.max(0, (stageWidth - cardCenter - 8) / fadeZone));
+        const opacity = Math.min(leftAlpha, rightAlpha);
+
+        btn.style.visibility = opacity <= 0.005 ? "hidden" : "visible";
+        btn.style.pointerEvents = opacity <= 0.08 ? "none" : "auto";
         btn.style.width = `${cardW}px`;
-        btn.style.transform = `translate3d(${x.toFixed(1)}px, ${arcDrop.toFixed(1)}px, ${depthZ.toFixed(1)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+        btn.style.transform = `perspective(1050px) translate3d(${x.toFixed(2)}px, ${arcDrop.toFixed(2)}px, ${depthZ.toFixed(2)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
         btn.style.opacity = opacity.toFixed(3);
         btn.style.zIndex = String(Math.round(50 - Math.abs(norm) * 25));
       });
