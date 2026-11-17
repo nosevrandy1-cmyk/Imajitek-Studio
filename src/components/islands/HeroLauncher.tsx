@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { CATALOG_CATEGORIES, CATALOG_ITEMS, type CatalogItem } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
-import { dispatchCatalogPick } from "@/lib/events";
+import { dispatchCatalogCustom, dispatchCatalogPick } from "@/lib/events";
 
 const CATEGORY_LABEL_MAP = new Map(CATALOG_CATEGORIES.map((c) => [c.id, c.label]));
 
@@ -46,6 +46,14 @@ export default function HeroLauncher() {
     dispatchCatalogPick(item.id);
   };
 
+  const addCustomQuery = () => {
+    const label = search.trim();
+    if (label.length < 2) return;
+    setOpen(false);
+    setSearch("");
+    dispatchCatalogCustom(label);
+  };
+
   const showDropdown = open && trimmedQuery.length > 0;
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
@@ -54,7 +62,13 @@ export default function HeroLauncher() {
       return;
     }
 
-    if (matches.length === 0) return;
+    if (matches.length === 0) {
+      if (e.key === "Enter" && showDropdown && search.trim().length >= 2) {
+        e.preventDefault();
+        addCustomQuery();
+      }
+      return;
+    }
 
     if (e.key === "ArrowDown") {
       e.preventDefault();
@@ -88,7 +102,7 @@ export default function HeroLauncher() {
             setOpen(true);
           }}
           onKeyDown={handleKeyDown}
-          placeholder="Cari software / layanan (Adobe, Canva, Claude, Web)..."
+          placeholder="Cari software atau layanan (Adobe, Canva, Claude, Web)..."
           aria-label="Cari layanan atau lisensi software"
           aria-expanded={showDropdown}
           aria-controls="hero-search-results"
@@ -126,10 +140,28 @@ export default function HeroLauncher() {
           aria-label="Hasil pencarian layanan dan software"
         >
           {matches.length === 0 ? (
-            <div className="hero-search-empty">
-              Tidak ditemukan hasil untuk &ldquo;{search.trim()}&rdquo;. Coba Adobe, Canva,
-              Magnific, ChatGPT, atau Website.
-            </div>
+            search.trim().length >= 2 ? (
+              <button
+                type="button"
+                role="option"
+                aria-selected="true"
+                className="hero-search-item is-highlighted"
+                onClick={addCustomQuery}
+              >
+                <span className="hero-search-item-left">
+                  <SpriteIcon id="phd-stack" className="ph-icon ph-icon-sm" />
+                  <span className="hero-search-item-text">
+                    <strong>+ Tambahkan &ldquo;{search.trim()}&rdquo;</strong>
+                    <small>Masukkan sebagai kebutuhan khusus di luar katalog standar</small>
+                  </span>
+                </span>
+                <span className="hero-search-item-cat">Kebutuhan Khusus</span>
+              </button>
+            ) : (
+              <div className="hero-search-empty">
+                Ketik minimal 2 huruf untuk mencari atau menambahkan software.
+              </div>
+            )
           ) : (
             matches.map((item, idx) => {
               const catLabel = CATEGORY_LABEL_MAP.get(item.cat) ?? "Layanan";

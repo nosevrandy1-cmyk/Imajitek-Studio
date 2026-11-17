@@ -276,22 +276,22 @@ export const STUDIO_SPECS = {
   },
   D: {
     badge: "Tombol D · Desain Figma",
-    title: "File desain terstruktur dan mudah dilanjutkan",
-    desc: "Setiap halaman didesain dengan komponen modular dan variabel warna/tipografi di Figma, supaya saat masuk ke tahap coding tidak ada ukuran yang membingungkan.",
+    title: "File desain terstruktur dan siap dilanjutkan",
+    desc: "Setiap halaman dirancang dengan komponen modular serta token warna dan tipografi di Figma agar siap dilanjutkan ke tahap pengembangan tanpa revisi ulang ukuran.",
     metricLabel: "Hasil Desain",
     metricValue: "File Figma + Panduan Brand"
   },
   L: {
     badge: "Tombol L · Aktivasi Lisensi",
     title: "Lisensi aktif langsung ke email Anda atau tim",
-    desc: "Pengadaan Adobe Creative Cloud Pro, Canva Pro & Business, Magnific, Envato Elements, hingga ChatGPT, Claude, dan Gemini diproses resmi ke akun milik Anda.",
+    desc: "Pengadaan Adobe Creative Cloud Pro, Canva Pro & Business, Magnific, Envato Elements, hingga ChatGPT, Claude, dan Gemini didaftarkan langsung ke akun resmi milik Anda.",
     metricLabel: "Status Akun",
     metricValue: "Resmi & Non-Sharing"
   },
   S: {
     badge: "Tombol S · Pembayaran & Support",
     title: "Satu tagihan Rupiah dan dukungan setelah rilis",
-    desc: "Pembelian beberapa software bisa digabung dalam satu pembayaran transfer Rupiah, lengkap dengan pengingat sebelum masa aktif habis dan bantuan update web.",
+    desc: "Pembelian beberapa software dapat digabung dalam satu pembayaran transfer Rupiah, lengkap dengan pengingat perpanjangan dan dukungan pembaruan web.",
     metricLabel: "Metode Bayar",
     metricValue: "Transfer Bank Rupiah"
   }
@@ -311,14 +311,14 @@ export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
       "Ya. Semua langganan Adobe, Canva, Magnific, Envato, ChatGPT, Claude, dan Gemini masuk langsung ke email pribadi atau domain kantor Anda, bukan akun sharing."
   },
   {
-    question: "Kenapa harga per akun tidak dipasang angka mati?",
+    question: "Mengapa harga per akun tidak dicantumkan langsung?",
     answer:
-      "Karena kurs USD berjalan terus dan setiap vendor punya opsi paket personal, team, bulanan, maupun tahunan. Anda cukup atur jumlah akun per software di katalog agar kami kirimkan harga fix dalam Rupiah."
+      "Karena kurs USD bersifat dinamis dan setiap vendor memiliki paket personal, tim, bulanan, maupun tahunan. Cukup atur kebutuhan akun di katalog, dan kami akan mengirimkan rincian harga final dalam Rupiah."
   },
   {
-    question: "Bisa gabung proyek web/Figma sekaligus lisensi tim?",
+    question: "Bisakah menggabungkan proyek web dan pengadaan lisensi?",
     answer:
-      "Bisa. Anda dapat memesan pembuatan website atau desain Figma terpisah maupun digabung bersama pengadaan software tim dalam satu alur pembayaran."
+      "Bisa. Anda dapat memesan pembuatan website atau desain Figma secara terpisah maupun bersamaan dengan pengadaan software tim dalam satu penawaran."
   },
   {
     question: "Apakah kode website dan file Figma menjadi milik kami?",
@@ -454,7 +454,7 @@ export const ORDER_FEED_ITEMS: readonly OrderFeedItem[] = [
     statusLabel: "Diproses",
     prefillTopic: "Pembelian Lisensi Software & AI",
     prefillNote:
-      "Saya tertarik memesan 4 akun Adobe Creative Cloud Pro (Tahunan) ke email tim kami."
+      "Mohon penawaran untuk 4 akun Adobe Creative Cloud Pro (Tahunan) ke email tim kami."
   },
   {
     code: "#IMJ-417",
@@ -477,7 +477,7 @@ export const ORDER_FEED_ITEMS: readonly OrderFeedItem[] = [
     statusLabel: "Serah Terima",
     prefillTopic: "Website + Desain + Lisensi",
     prefillNote:
-      "Saya ingin berdiskusi pembuatan website perusahaan beserta Design System di Figma."
+      "Saya ingin berkonsultasi mengenai pembuatan website perusahaan beserta Design System di Figma."
   },
   {
     code: "#IMJ-415",
@@ -499,7 +499,7 @@ export const ORDER_FEED_ITEMS: readonly OrderFeedItem[] = [
     status: "active",
     statusLabel: "Aktif",
     prefillTopic: "Pembelian Lisensi Software & AI",
-    prefillNote: "Mohon info harga 2 akun Magnific AI dan 2 akun Google Gemini."
+    prefillNote: "Mohon penawaran resmi untuk 2 akun Magnific AI dan 2 akun Google Gemini."
   },
   {
     code: "#IMJ-413",

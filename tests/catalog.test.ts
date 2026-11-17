@@ -11,9 +11,11 @@ import {
   MAX_SEAT_QTY,
   MIN_SEAT_QTY,
   addCatalogSelection,
+  addCustomSelection,
   buildQuoteNote,
   parseQuoteSelections,
   removeCatalogSelection,
+  resolveSelections,
   serializeQuoteSelections,
   toInquiryItems,
   toggleCatalogSelection,
@@ -105,5 +107,35 @@ describe("Per-Software Quote State Transitions", () => {
 
     const trimmed = removeCatalogSelection(state, "magnific");
     expect(trimmed.map((s) => s.id)).toEqual(["web"]);
+  });
+
+  it("supports custom unlisted software/service entries, deduplicates them, and round-trips URLs", () => {
+    const first = addCustomSelection([], "  Notion   Plus ");
+    expect(first.addedId).toBe("custom~Notion%20Plus");
+    expect(first.next).toHaveLength(1);
+
+    // Case-insensitive duplicate custom entry is ignored
+    const duplicate = addCustomSelection(first.next, "notion plus");
+    expect(duplicate.next).toHaveLength(1);
+
+    // Exact preset catalog label matches the existing catalog item instead of creating custom~
+    const exactMatch = addCustomSelection(duplicate.next, "figma organization");
+    expect(exactMatch.addedId).toBe("figma");
+    expect(exactMatch.next).toHaveLength(2);
+
+    // Step quantity and billing on the custom item
+    let updated = updateSelectionQuantity(exactMatch.next, first.addedId!, { exact: 6 });
+    updated = updateSelectionBilling(updated, first.addedId!, "Bulanan");
+
+    const resolved = resolveSelections(updated);
+    expect(resolved[0]?.isCustom).toBe(true);
+    expect(resolved[0]?.item.label).toBe("Notion Plus");
+
+    const note = buildQuoteNote(updated);
+    expect(note).toContain("Notion Plus [Di luar katalog]: 6 akun · Bulanan");
+
+    const encoded = serializeQuoteSelections(updated);
+    const decoded = parseQuoteSelections(encoded);
+    expect(decoded).toEqual(updated);
   });
 });

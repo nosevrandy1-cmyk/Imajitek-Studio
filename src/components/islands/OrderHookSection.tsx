@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties, type FocusEvent } from "react";
-import { COMPANY, ORDER_FEED_ITEMS } from "@/domain/catalog";
+import { ORDER_FEED_ITEMS } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
 import { dispatchInquiryPrefill } from "@/lib/events";
 
@@ -91,7 +91,7 @@ export default function OrderHookSection() {
                           scrollToId: "home-inquiry"
                         })
                       }
-                      aria-label={`Ajukan kebutuhan serupa: ${entry.detail}`}
+                      aria-label={`Mulai dari kebutuhan serupa: ${entry.detail}`}
                     >
                       <span className="order-row-code tabular">{entry.code}</span>
                       <span className="order-row-detail">
@@ -127,10 +127,10 @@ export default function OrderHookSection() {
         </div>
 
         <div className="order-feed-foot">
-          <h3>Aktivasi rapi, transparan, dan langsung ke email Anda</h3>
+          <h3>Pengadaan rapi dan langsung aktif ke akun Anda</h3>
           <p>
-            Setiap pengadaan lisensi resmi maupun proyek web &amp; Figma tercatat jelas per akun,
-            dibayar dalam Rupiah tanpa kartu kredit dolar.
+            Setiap pembelian lisensi resmi maupun proyek web &amp; Figma tercatat per akun dan
+            dibayarkan dalam Rupiah.
           </p>
         </div>
       </div>
@@ -140,11 +140,10 @@ export default function OrderHookSection() {
           <span className="order-cta-icon" aria-hidden="true">
             <SpriteIcon id="phd-stack" className="ph-icon" />
           </span>
-          <h3>Satu tim untuk web, Figma, dan semua lisensi resmi.</h3>
+          <h3>Satu partner untuk web, Figma, dan lisensi tim.</h3>
           <p>
-            Mulai dari company profile, desain antarmuka di Figma, hingga akun Adobe CC Pro, ChatGPT
-            Team, Claude, dan Canva — langsung jalan dalam satu koordinasi via{" "}
-            {COMPANY.whatsappDisplay}.
+            Gabungkan pembuatan website, desain UI/UX, dan pengadaan software resmi dalam satu alur
+            kerja tanpa mengurus vendor terpisah.
           </p>
         </div>
 
@@ -155,13 +154,13 @@ export default function OrderHookSection() {
             onClick={() =>
               dispatchInquiryPrefill({
                 notes:
-                  "Halo Imajitek Studio, saya ingin mengajukan pesanan lisensi software / konsultasi pembuatan website & Figma.",
+                  "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
                 topic: "Website + Desain + Lisensi",
                 scrollToId: "home-inquiry"
               })
             }
           >
-            <span>Ajukan Pesanan Sekarang</span>
+            <span>Konsultasikan Kebutuhan</span>
             <SpriteIcon id="ph-arrow-right" className="ph-icon ph-icon-xs" />
           </button>
         </div>

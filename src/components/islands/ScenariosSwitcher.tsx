@@ -66,10 +66,10 @@ export default function ScenariosSwitcher() {
           }}
         >
           <span style={{ fontSize: "12px", color: "var(--ink-muted)" }}>
-            Paket bisa disesuaikan dengan jumlah anggota tim Anda
+            Kombinasi dapat disesuaikan dengan kebutuhan tim Anda
           </span>
           <button type="button" className="btn btn-glass btn-sm" onClick={handleApply}>
-            Tanyakan Paket Ini
+            Gunakan Paket Ini
           </button>
         </div>
       </div>

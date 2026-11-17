@@ -2,7 +2,7 @@ import { z } from "zod";
 import { BillingPeriodSchema } from "./catalog";
 
 export const SelectedQuoteItemSchema = z.object({
-  id: z.string().min(1).max(64),
+  id: z.string().min(1).max(160),
   label: z.string().min(1).max(120),
   type: z.enum(["license", "project"]),
   quantity: z.number().int().min(1).max(500),

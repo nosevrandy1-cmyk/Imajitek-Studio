@@ -2,6 +2,7 @@ import type { SelectedQuoteItem } from "@/domain/inquiry";
 
 export const PREFILL_INQUIRY_EVENT = "imajitek:prefill-inquiry";
 export const CATALOG_PICK_EVENT = "imajitek:catalog-pick";
+export const CATALOG_CUSTOM_EVENT = "imajitek:catalog-custom";
 
 export interface PrefillInquiryDetail {
   notes: string;
@@ -14,6 +15,7 @@ declare global {
   interface Window {
     __imajitekPendingPrefill?: PrefillInquiryDetail;
     __imajitekPendingCatalogPick?: string;
+    __imajitekPendingCatalogCustom?: string;
   }
 }
 
@@ -89,4 +91,40 @@ export function subscribeCatalogPick(handler: (itemId: string) => void): () => v
   };
   window.addEventListener(CATALOG_PICK_EVENT, listener);
   return () => window.removeEventListener(CATALOG_PICK_EVENT, listener);
+}
+
+export function dispatchCatalogCustom(label: string): void {
+  if (typeof window === "undefined") return;
+  const normalized = label.trim();
+  if (!normalized) return;
+
+  window.__imajitekPendingCatalogCustom = normalized;
+  window.dispatchEvent(
+    new CustomEvent<{ label: string }>(CATALOG_CUSTOM_EVENT, { detail: { label: normalized } })
+  );
+
+  const target = document.getElementById("home-catalog");
+  if (target) {
+    target.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+export function subscribeCatalogCustom(handler: (label: string) => void): () => void {
+  if (typeof window === "undefined") return () => undefined;
+
+  if (window.__imajitekPendingCatalogCustom) {
+    const pending = window.__imajitekPendingCatalogCustom;
+    delete window.__imajitekPendingCatalogCustom;
+    handler(pending);
+  }
+
+  const listener = (event: Event) => {
+    const custom = event as CustomEvent<{ label: string }>;
+    if (custom.detail?.label) {
+      delete window.__imajitekPendingCatalogCustom;
+      handler(custom.detail.label);
+    }
+  };
+  window.addEventListener(CATALOG_CUSTOM_EVENT, listener);
+  return () => window.removeEventListener(CATALOG_CUSTOM_EVENT, listener);
 }
