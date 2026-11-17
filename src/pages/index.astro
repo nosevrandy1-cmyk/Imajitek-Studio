@@ -1,10 +1,56 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroAmbient from "@/components/islands/HeroAmbient";
 import HeroLauncher from "@/components/islands/HeroLauncher";
 import CatalogBuilder from "@/components/islands/CatalogBuilder";
 import OrderHookSection from "@/components/islands/OrderHookSection";
-import FaqAccordion from "@/components/islands/FaqAccordion";
-import InquiryForm from "@/components/islands/InquiryForm";
+import FaqDrum from "@/components/islands/FaqDrum";
+import { CATALOG_ITEMS, COMPANY, HOME_FAQ_ITEMS, SOFTWARE_SUITE_DIRECTORY } from "@/domain/catalog";
+
+const homeStructuredData = JSON.stringify({
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "FAQPage",
+      mainEntity: HOME_FAQ_ITEMS.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: item.answer
+        }
+      }))
+    },
+    {
+      "@type": "OfferCatalog",
+      name: "Katalog Software Resmi & Jasa Digital Imajitek Studio",
+      url: COMPANY.siteUrl,
+      numberOfItems: CATALOG_ITEMS.length,
+      itemListElement: [
+        ...CATALOG_ITEMS.map((item, idx) => ({
+          "@type": "ListItem",
+          position: idx + 1,
+          item: {
+            "@type": item.type === "license" ? "SoftwareApplication" : "Service",
+            name: item.label,
+            description: item.sub,
+            provider: { "@id": `${COMPANY.siteUrl}/#organization` }
+          }
+        })),
+        ...SOFTWARE_SUITE_DIRECTORY.map((suite, idx) => ({
+          "@type": "ListItem",
+          position: CATALOG_ITEMS.length + idx + 1,
+          item: {
+            "@type": "Product",
+            name: suite.suite,
+            brand: { "@type": "Brand", name: suite.vendor },
+            description: `${suite.summary} Mencakup: ${suite.includedTools.join(", ")}.`
+          }
+        }))
+      ]
+    }
+  ]
+});
 ---
 
 <BaseLayout
@@ -12,67 +58,49 @@ import InquiryForm from "@/components/islands/InquiryForm";
   description="Imajitek Studio (PT Imaji Teknologi Bersama) mengerjakan pembuatan website, desain UI/UX di Figma, dan pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva, Magnific, Envato Elements, ChatGPT, Claude, dan Gemini."
   canonicalPath="/"
 >
-  <section class="hero">
-    <h1 class="hero-title">
-      Pembuatan web, desain produk, dan <span class="hl">lisensi software resmi</span>.
-    </h1>
-    <p class="hero-sub">
-      Kami mengerjakan website dan aplikasi web, desain antarmuka di Figma, serta pengadaan lisensi
-      software kreatif dan AI resmi dengan pembayaran Rupiah.
-    </p>
-    <div class="hero-ctas">
-      <button type="button" class="btn btn-nvidia" id="hero-inquire-btn">
-        <span>Ajukan Kebutuhan</span>
-        <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-          <use href="#ph-arrow-right"></use>
-        </svg>
-      </button>
-      <a class="btn btn-glass" href="#home-catalog">Lihat Katalog Software</a>
-    </div>
-
-    <HeroLauncher client:load />
-  </section>
-
-  <section class="section section-divider" id="home-catalog">
-    <div class="section-head">
-      <h2 class="section-title">Katalog software resmi &amp; layanan siap pesan</h2>
-      <p class="section-desc">
-        Pilih software atau layanan dari daftar, sesuaikan jumlah akun, atau tambahkan kebutuhan
-        khusus sebelum mengirim permintaan penawaran.
+  <script slot="head" type="application/ld+json" set:html={homeStructuredData} />
+  <section class="hero-band">
+    <HeroAmbient client:load />
+    <div class="container hero">
+      <h1 class="hero-title">
+        Pembuatan web, desain produk, dan <span class="hl">lisensi software resmi</span>.
+      </h1>
+      <p class="hero-sub">
+        Kami mengerjakan website dan aplikasi web, desain antarmuka di Figma, serta pengadaan
+        lisensi software kreatif dan AI resmi dengan pembayaran Rupiah.
       </p>
-    </div>
-
-    <div class="catalog-unified-stack">
-      <CatalogBuilder mode="home" client:visible />
-      <OrderHookSection client:visible />
-    </div>
-  </section>
-
-  <section class="section section-divider" id="home-inquiry">
-    <div class="home-engage-grid">
-      <div>
-        <div class="section-head align-left" style="margin-bottom:20px;">
-          <h2 class="section-title">Pertanyaan yang sering diajukan</h2>
-          <p class="section-desc">
-            Ringkasan seputar aktivasi akun, penawaran harga, dan kepemilikan aset proyek.
-          </p>
-        </div>
-        <FaqAccordion client:visible />
+      <div class="hero-ctas">
+        <a class="btn btn-nvidia" id="hero-inquire-btn" href="/hubungi">
+          <span>Ajukan Kebutuhan</span>
+          <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+            <use href="#ph-arrow-right"></use>
+          </svg>
+        </a>
+        <a class="btn btn-glass" href="#home-catalog">Lihat Katalog Software</a>
       </div>
 
-      <InquiryForm variant="home" client:visible />
+      <HeroLauncher client:load />
     </div>
   </section>
+
+  <section class="section band-surface" id="home-catalog">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">Katalog software resmi &amp; layanan siap pesan</h2>
+        <p class="section-desc">
+          Pilih software atau layanan dari daftar, sesuaikan jumlah akun, atau tambahkan kebutuhan
+          khusus sebelum mengirim permintaan penawaran.
+        </p>
+      </div>
+
+      <div class="catalog-unified-stack">
+        <CatalogBuilder client:visible />
+        <OrderHookSection client:visible />
+      </div>
+    </div>
+  </section>
+
+  <section class="section band-light faq-band-section" id="home-faq-band">
+    <FaqDrum client:visible />
+  </section>
 </BaseLayout>
-
-<script>
-  import { dispatchInquiryPrefill } from "@/lib/events";
-
-  document.getElementById("hero-inquire-btn")?.addEventListener("click", () => {
-    dispatchInquiryPrefill({
-      notes:
-        "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
-      scrollToId: "home-inquiry"
-    });
-  });
-</script>

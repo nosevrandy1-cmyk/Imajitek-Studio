@@ -7,7 +7,7 @@ const isHome = Astro.props.currentPath === "/";
 const isStudio = Astro.props.currentPath.startsWith("/web-desain");
 const isSoftware = Astro.props.currentPath.startsWith("/software");
 const isContact = Astro.props.currentPath.startsWith("/hubungi");
-const waTarget = isHome ? "#home-inquiry" : "/hubungi";
+const waTarget = "/hubungi";
 ---
 
 <div class="nav-wrapper" id="nav-wrapper">

@@ -10,7 +10,7 @@ import {
   type CatalogCategoryId
 } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
-import { dispatchInquiryPrefill, subscribeCatalogCustom, subscribeCatalogPick } from "@/lib/events";
+import { subscribeCatalogCustom, subscribeCatalogPick } from "@/lib/events";
 import {
   INITIAL_SELECTIONS,
   MAX_CUSTOM_LABEL_LENGTH,
@@ -18,11 +18,9 @@ import {
   MIN_SEAT_QTY,
   addCatalogSelection,
   addCustomSelection,
-  buildQuoteNote,
   removeCatalogSelection,
   resolveSelections,
   serializeQuoteSelections,
-  toInquiryItems,
   toggleCatalogSelection,
   updateSelectionBilling,
   updateSelectionQuantity,
@@ -30,11 +28,10 @@ import {
 } from "@/lib/quote";
 
 interface CatalogBuilderProps {
-  mode: "home" | "contact";
   showMarquee?: boolean;
 }
 
-export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuilderProps) {
+export default function CatalogBuilder({ showMarquee = true }: CatalogBuilderProps) {
   const [activeCat, setActiveCat] = useState<CatalogCategoryId>("creative");
   const [selections, setSelections] = useState<CatalogSelection[]>(() => [...INITIAL_SELECTIONS]);
   const [customInput, setCustomInput] = useState("");
@@ -109,19 +106,6 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
   };
 
   const handleSubmitQuote = () => {
-    const note = buildQuoteNote(selections);
-    const items = toInquiryItems(selections);
-
-    if (mode === "home") {
-      dispatchInquiryPrefill({
-        notes: note,
-        topic: "Pembelian Lisensi Software & AI",
-        items,
-        scrollToId: "home-inquiry"
-      });
-      return;
-    }
-
     const encoded = serializeQuoteSelections(selections);
     const nextUrl = encoded ? `/hubungi?quote=${encodeURIComponent(encoded)}` : "/hubungi";
     window.location.assign(nextUrl);

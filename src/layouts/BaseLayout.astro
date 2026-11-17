@@ -21,29 +21,96 @@ export interface Props {
   title?: string;
   description?: string;
   canonicalPath?: string;
+  keywords?: string;
+  ogImage?: string;
 }
 
 const {
   title = `${COMPANY.brandName} | ${COMPANY.legalName}`,
   description = "Imajitek Studio (PT Imaji Teknologi Bersama) mengerjakan pembuatan website, desain UI/UX di Figma, dan pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva, Magnific, Envato Elements, ChatGPT, Claude, dan Gemini.",
-  canonicalPath = "/"
+  canonicalPath = "/",
+  keywords = "Imajitek Studio, PT Imaji Teknologi Bersama, lisensi Adobe resmi, Adobe Creative Cloud Pro, Photoshop, Illustrator, Premiere Pro, Canva Pro, Magnific, Envato Elements, ChatGPT Team, Claude Pro, Google Gemini, Figma, Microsoft 365, Google Workspace, Autodesk, JetBrains, jasa pembuatan website, desain UI UX Figma, invoice Rupiah",
+  ogImage = "/images/og-imajitek.webp"
 } = Astro.props;
 
 const canonicalUrl = new URL(canonicalPath, COMPANY.siteUrl).toString();
-const organizationJsonLd = JSON.stringify({
+const ogImageUrl = new URL(ogImage, COMPANY.siteUrl).toString();
+
+const globalSchemaGraph = JSON.stringify({
   "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: COMPANY.brandName,
-  legalName: COMPANY.legalName,
-  url: COMPANY.siteUrl,
-  email: COMPANY.email,
-  telephone: `+${COMPANY.whatsappE164}`,
-  address: {
-    "@type": "PostalAddress",
-    streetAddress: COMPANY.address,
-    addressCountry: "ID"
-  },
-  hasMap: COMPANY.mapsUrl
+  "@graph": [
+    {
+      "@type": ["Organization", "ProfessionalService"],
+      "@id": `${COMPANY.siteUrl}/#organization`,
+      name: COMPANY.brandName,
+      alternateName: ["Imajitek", COMPANY.legalName, "Imaji Teknologi Bersama"],
+      legalName: COMPANY.legalName,
+      url: COMPANY.siteUrl,
+      logo: {
+        "@type": "ImageObject",
+        url: `${COMPANY.siteUrl}/favicon-192x192.png`
+      },
+      image: ogImageUrl,
+      email: COMPANY.email,
+      telephone: `+${COMPANY.whatsappE164}`,
+      priceRange: "IDR",
+      areaServed: {
+        "@type": "Country",
+        name: "Indonesia"
+      },
+      address: {
+        "@type": "PostalAddress",
+        streetAddress: COMPANY.address,
+        addressCountry: "ID"
+      },
+      hasMap: COMPANY.mapsUrl,
+      contactPoint: {
+        "@type": "ContactPoint",
+        contactType: "sales",
+        telephone: `+${COMPANY.whatsappE164}`,
+        email: COMPANY.email,
+        availableLanguage: ["Indonesian", "English"]
+      },
+      knowsAbout: [
+        "Website Development",
+        "Web Application Development",
+        "UI/UX Design Figma",
+        "Design System",
+        "Adobe Creative Cloud Pro",
+        "Adobe Photoshop",
+        "Adobe Illustrator",
+        "Adobe Premiere Pro",
+        "Adobe After Effects",
+        "Adobe Acrobat Pro",
+        "Canva Pro & Business",
+        "Magnific AI",
+        "Envato Elements",
+        "Figma Organization",
+        "Autodesk AutoCAD",
+        "ChatGPT Team & Plus",
+        "Claude Pro & Team",
+        "Google Gemini",
+        "Microsoft 365 Business",
+        "Google Workspace",
+        "JetBrains All Products",
+        "GitHub Team",
+        "Cloudflare Business"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${COMPANY.siteUrl}/#website`,
+      url: COMPANY.siteUrl,
+      name: COMPANY.brandName,
+      inLanguage: "id-ID",
+      publisher: { "@id": `${COMPANY.siteUrl}/#organization` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${COMPANY.siteUrl}/software?q={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      }
+    }
+  ]
 });
 ---
 
@@ -54,7 +121,10 @@ const organizationJsonLd = JSON.stringify({
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
     <link rel="canonical" href={canonicalUrl} />
+    <link rel="alternate" type="text/plain" title="AI & LLM Reference" href="/llms.txt" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192x192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -65,17 +135,22 @@ const organizationJsonLd = JSON.stringify({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalUrl} />
-    <meta name="twitter:card" content="summary" />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <script type="application/ld+json" set:html={organizationJsonLd} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <script type="application/ld+json" set:html={globalSchemaGraph} />
+    <slot name="head" />
   </head>
   <body id="top">
     <a class="skip-link" href="#main-content">Langsung ke konten utama</a>
     <IconSprite />
     <Navbar currentPath={Astro.url.pathname} />
 
-    <main id="main-content" class="container">
+    <main id="main-content">
       <slot />
     </main>
 
