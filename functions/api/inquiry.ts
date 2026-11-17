@@ -67,16 +67,11 @@ async function verifyTurnstile(
   return payload.success === true;
 }
 
-function buildHumanSummary(data: InquiryRequest, emailDispatched: boolean): string {
-  const targetEmail = COMPANY.email;
+function buildHumanSummary(data: InquiryRequest): string {
   const count = data.selectedItems.length;
   const itemPrefix =
     count > 0 ? `${count} item pilihan dari ${data.company}` : `Permintaan dari ${data.company}`;
-
-  if (emailDispatched) {
-    return `${itemPrefix} telah dikirim ke email ${targetEmail}. Tim kami segera menghubungi WhatsApp ${data.whatsapp}.`;
-  }
-  return `${itemPrefix} telah tercatat rapi. Tim kami siap membalas melalui WhatsApp ${data.whatsapp} atau email ${targetEmail}.`;
+  return `${itemPrefix} sudah terkirim ke tim Imajitek Studio. Kami akan membalas secepatnya.`;
 }
 
 function buildEmailBodies(
@@ -198,9 +193,9 @@ async function forwardInquiryWebhook(
   inquiryId: string,
   receivedAt: string,
   data: InquiryRequest
-): Promise<void> {
+): Promise<boolean> {
   try {
-    await fetch(webhookUrl, {
+    const res = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json; charset=utf-8" },
       body: JSON.stringify({
@@ -216,8 +211,10 @@ async function forwardInquiryWebhook(
         selectedItems: data.selectedItems
       })
     });
+    return res.ok;
   } catch (err) {
     console.error("Failed to dispatch inquiry webhook:", err);
+    return false;
   }
 }
 
@@ -377,15 +374,27 @@ export async function handleInquiryRequest(
     );
   }
 
+  if (!env.RESEND_API_KEY && !env.INQUIRY_WEBHOOK_URL) {
+    return jsonResponse(
+      {
+        ok: false,
+        error: "EMAIL_NOT_CONFIGURED",
+        message: `Pengiriman otomatis via email belum aktif di server. Silakan lanjutkan langsung lewat WhatsApp atau email di bawah.`
+      },
+      503
+    );
+  }
+
   let emailDispatched = false;
   if (env.RESEND_API_KEY) {
     emailDispatched = await dispatchResendEmail(env, inquiryId, receivedAt, data);
-    if (!emailDispatched) {
+    if (!emailDispatched && !env.INQUIRY_WEBHOOK_URL) {
       return jsonResponse(
         {
           ok: false,
           error: "EMAIL_DELIVERY_FAILED",
-          message: `Pengiriman email ke ${COMPANY.email} sedang mengalami gangguan. Anda tetap dapat menghubungi WhatsApp ${COMPANY.whatsappDisplay}.`
+          message:
+            "Pengiriman email sedang mengalami kendala teknis. Anda dapat langsung menghubungi kami melalui WhatsApp atau email."
         },
         502
       );
@@ -393,11 +402,26 @@ export async function handleInquiryRequest(
   }
 
   if (env.INQUIRY_WEBHOOK_URL) {
-    const job = forwardInquiryWebhook(env.INQUIRY_WEBHOOK_URL, inquiryId, receivedAt, data);
-    if (waitUntil) {
-      waitUntil(job);
+    if (emailDispatched && waitUntil) {
+      waitUntil(forwardInquiryWebhook(env.INQUIRY_WEBHOOK_URL, inquiryId, receivedAt, data));
     } else {
-      await job;
+      const webhookOk = await forwardInquiryWebhook(
+        env.INQUIRY_WEBHOOK_URL,
+        inquiryId,
+        receivedAt,
+        data
+      );
+      if (!emailDispatched && !webhookOk) {
+        return jsonResponse(
+          {
+            ok: false,
+            error: "DELIVERY_FAILED",
+            message:
+              "Pengiriman formulir sedang terkendala. Anda dapat langsung menghubungi kami lewat WhatsApp atau email."
+          },
+          502
+        );
+      }
     }
   }
 
@@ -406,7 +430,7 @@ export async function handleInquiryRequest(
       ok: true,
       inquiryId,
       receivedAt,
-      summary: buildHumanSummary(data, emailDispatched),
+      summary: buildHumanSummary(data),
       emailDispatched
     },
     201

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
 import {
   CATALOG_CATEGORIES,
   CATALOG_ITEMS,
@@ -10,14 +10,15 @@ import {
   type CatalogCategoryId
 } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
-import { dispatchInquiryPrefill, subscribeCatalogPick } from "@/lib/events";
+import { dispatchInquiryPrefill, subscribeCatalogCustom, subscribeCatalogPick } from "@/lib/events";
 import {
   INITIAL_SELECTIONS,
+  MAX_CUSTOM_LABEL_LENGTH,
   MAX_SEAT_QTY,
   MIN_SEAT_QTY,
   addCatalogSelection,
+  addCustomSelection,
   buildQuoteNote,
-  isSelected,
   removeCatalogSelection,
   resolveSelections,
   serializeQuoteSelections,
@@ -36,6 +37,7 @@ interface CatalogBuilderProps {
 export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuilderProps) {
   const [activeCat, setActiveCat] = useState<CatalogCategoryId>("creative");
   const [selections, setSelections] = useState<CatalogSelection[]>(() => [...INITIAL_SELECTIONS]);
+  const [customInput, setCustomInput] = useState("");
 
   // Apply URL filter params when opened via /software?cat=...&pick=...
   useEffect(() => {
@@ -68,6 +70,12 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
     });
   }, []);
 
+  useEffect(() => {
+    return subscribeCatalogCustom((label) => {
+      setSelections((prev) => addCustomSelection(prev, label).next);
+    });
+  }, []);
+
   const visibleItems = useMemo(
     () => CATALOG_ITEMS.filter((item) => item.cat === activeCat),
     [activeCat]
@@ -80,14 +88,12 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
 
   const resolvedSelections = useMemo(() => resolveSelections(selections), [selections]);
 
-  const handleMarqueeClick = (itemId: string) => {
-    const item = CATALOG_MAP.get(itemId);
-    if (!item) return;
-    const adding = !isSelected(selections, itemId);
-    setSelections((prev) => toggleCatalogSelection(prev, itemId));
-    if (adding) {
-      setActiveCat(item.cat);
-    }
+  const handleAddCustom = (e: SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const trimmed = customInput.trim();
+    if (trimmed.length < 2) return;
+    setSelections((prev) => addCustomSelection(prev, trimmed).next);
+    setCustomInput("");
   };
 
   const handleStep = (id: string, delta: number) => {
@@ -124,40 +130,22 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
   return (
     <>
       {showMarquee && (
-        <div className="marquee-wrap" aria-label="Daftar Software dan Platform Resmi">
+        <div className="marquee-wrap" aria-hidden="true">
           <div className="marquee-track">
-            {[...MARQUEE_TOP_ROW, ...MARQUEE_TOP_ROW].map((pill, index) => {
-              const picked = isSelected(selections, pill.id);
-              return (
-                <button
-                  key={`top-${pill.id}-${index}`}
-                  type="button"
-                  className={`ext-pill ${picked ? "is-picked" : ""}`}
-                  aria-pressed={picked}
-                  onClick={() => handleMarqueeClick(pill.id)}
-                >
-                  <SpriteIcon id={pill.icon} className="brand-svg" />
-                  <span>{pill.label}</span>
-                </button>
-              );
-            })}
+            {[...MARQUEE_TOP_ROW, ...MARQUEE_TOP_ROW].map((pill, index) => (
+              <span key={`top-${pill.id}-${index}`} className="ext-pill">
+                <SpriteIcon id={pill.icon} className="brand-svg" />
+                <span>{pill.label}</span>
+              </span>
+            ))}
           </div>
           <div className="marquee-track reverse">
-            {[...MARQUEE_BOTTOM_ROW, ...MARQUEE_BOTTOM_ROW].map((pill, index) => {
-              const picked = isSelected(selections, pill.id);
-              return (
-                <button
-                  key={`btm-${pill.id}-${index}`}
-                  type="button"
-                  className={`ext-pill ${picked ? "is-picked" : ""}`}
-                  aria-pressed={picked}
-                  onClick={() => handleMarqueeClick(pill.id)}
-                >
-                  <SpriteIcon id={pill.icon} className="brand-svg" />
-                  <span>{pill.label}</span>
-                </button>
-              );
-            })}
+            {[...MARQUEE_BOTTOM_ROW, ...MARQUEE_BOTTOM_ROW].map((pill, index) => (
+              <span key={`btm-${pill.id}-${index}`} className="ext-pill">
+                <SpriteIcon id={pill.icon} className="brand-svg" />
+                <span>{pill.label}</span>
+              </span>
+            ))}
           </div>
         </div>
       )}
@@ -165,7 +153,7 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
       <div className="calculator-box">
         <div className="calc-controls">
           <div className="calc-top-bar">
-            <span className="calc-bar-title">Pilih Kategori Software &amp; Jasa</span>
+            <span className="calc-bar-title">Pilih Software &amp; Layanan</span>
             <div className="calc-cat-tabs" role="tablist" aria-label="Filter kategori katalog">
               {CATALOG_CATEGORIES.map((cat) => (
                 <button
@@ -216,34 +204,51 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
               );
             })}
           </div>
+
+          <form className="calc-custom-adder" onSubmit={handleAddCustom}>
+            <input
+              type="text"
+              className="calc-custom-input"
+              value={customInput}
+              onChange={(e) => setCustomInput(e.target.value)}
+              maxLength={MAX_CUSTOM_LABEL_LENGTH}
+              placeholder="Tidak ada di daftar? Tulis software / jasa lain..."
+              aria-label="Tambah software atau jasa di luar daftar"
+            />
+            <button
+              type="submit"
+              className="btn btn-glass btn-sm calc-custom-btn"
+              disabled={customInput.trim().length < 2}
+            >
+              + Tambah
+            </button>
+          </form>
         </div>
 
         <div className="calc-summary">
           <div>
             <div className="calc-summary-head">
-              <span className="calc-summary-eyebrow">Ringkasan Kebutuhan Anda</span>
-              <span className="calc-summary-eyebrow tabular">
-                {resolvedSelections.length} Item Dipilih
-              </span>
+              <span className="calc-summary-eyebrow">Ringkasan Kebutuhan</span>
+              <span className="calc-summary-eyebrow tabular">{resolvedSelections.length} item</span>
             </div>
             <div className="calc-total tabular">
               {resolvedSelections.length === 0
-                ? "Belum ada pilihan"
-                : `${resolvedSelections.length} Item Siap Diajukan`}
+                ? "Belum ada item"
+                : `${resolvedSelections.length} item siap diajukan`}
             </div>
             <p className="calc-note">
-              Atur jumlah akun dan durasi per software secara terpisah sebelum meminta penawaran
-              harga fix dalam Rupiah.
+              Atur jumlah akun dan durasi per software sebelum mengirim permintaan penawaran resmi.
             </p>
           </div>
 
           <div className="calc-breakdown">
             {resolvedSelections.length === 0 ? (
               <div className="calc-empty-box">
-                Klik logo di atas atau pilih software di sebelah kiri untuk mulai menyusun daftar.
+                Pilih software atau layanan di sebelah kiri, atau tulis kebutuhan khusus di bawah
+                daftar.
               </div>
             ) : (
-              resolvedSelections.map(({ item, selection }) => (
+              resolvedSelections.map(({ item, selection, isCustom }) => (
                 <div key={item.id} className="calc-line-item">
                   <div className="calc-line-top">
                     <div className="calc-line-title">
@@ -252,6 +257,7 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
                         className={item.isBrand ? "brand-svg brand-svg-sm" : "ph-icon ph-icon-sm"}
                       />
                       <span>{item.label}</span>
+                      {isCustom && <span className="calc-custom-badge">Di luar daftar</span>}
                     </div>
                     <button
                       type="button"
@@ -265,7 +271,7 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
 
                   <div className="calc-line-controls">
                     {item.type === "project" ? (
-                      <span className="project-badge">Proyek Custom (Estimasi Scope)</span>
+                      <span className="project-badge">Proyek Custom · Sesuai Scope</span>
                     ) : (
                       <>
                         <div
@@ -328,8 +334,8 @@ export default function CatalogBuilder({ mode, showMarquee = true }: CatalogBuil
             style={{ width: "100%" }}
             onClick={handleSubmitQuote}
           >
-            <SpriteIcon id="ph-whatsapp-logo" className="ph-icon ph-icon-sm" />
-            <span>Minta Penawaran Resmi</span>
+            <span>Minta Penawaran</span>
+            <SpriteIcon id="ph-arrow-right" className="ph-icon ph-icon-sm" />
           </button>
         </div>
       </div>

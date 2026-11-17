@@ -134,7 +134,7 @@ describe("Cloudflare Pages Edge Functions", () => {
     expect(json.ok).toBe(true);
     expect(json.emailDispatched).toBe(true);
     expect(json.inquiryId).toMatch(/^IMJ-[A-Z0-9]{8}$/);
-    expect(json.summary).toContain("imajistudio.id@gmail.com");
+    expect(json.summary).toContain("Imajitek Studio");
 
     expect(fetchMock).toHaveBeenCalledTimes(1);
     const [calledUrl, init] = fetchMock.mock.calls[0]!;
@@ -142,6 +142,29 @@ describe("Cloudflare Pages Edge Functions", () => {
     const sentBody = JSON.parse(String(init?.body)) as { to: string[]; reply_to?: string };
     expect(sentBody.to).toEqual(["imajistudio.id@gmail.com"]);
     expect(sentBody.reply_to).toBe("tim@karyanusantara.co.id");
+  });
+
+  it("returns 503 EMAIL_NOT_CONFIGURED when neither RESEND_API_KEY nor INQUIRY_WEBHOOK_URL is set", async () => {
+    const req = makeJsonRequest({
+      company: "PT Bapenda Digital",
+      whatsapp: "081234567890",
+      formStartedAt: Date.now() - 5000,
+      spamChallenge: { a: 2, b: 6, answer: 8 },
+      selectedItems: [
+        {
+          id: "custom~Notion%20Plus",
+          label: "Notion Plus",
+          type: "license",
+          quantity: 3,
+          billing: "Tahunan"
+        }
+      ]
+    });
+    const res = await handleInquiryRequest(req, {});
+    expect(res.status).toBe(503);
+    const json = (await res.json()) as { ok: boolean; error: string };
+    expect(json.ok).toBe(false);
+    expect(json.error).toBe("EMAIL_NOT_CONFIGURED");
   });
 
   it("requires valid Turnstile token when TURNSTILE_SECRET_KEY is configured", async () => {

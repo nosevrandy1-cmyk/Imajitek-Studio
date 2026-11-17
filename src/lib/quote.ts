@@ -16,6 +16,28 @@ export const INITIAL_SELECTIONS: readonly CatalogSelection[] = [
 export const MIN_SEAT_QTY = 1;
 export const MAX_SEAT_QTY = 500;
 
+export const CUSTOM_ID_PREFIX = "custom~";
+export const MAX_CUSTOM_LABEL_LENGTH = 50;
+
+export function isCustomSelectionId(id: string): boolean {
+  return id.startsWith(CUSTOM_ID_PREFIX) && id.length > CUSTOM_ID_PREFIX.length;
+}
+
+export function createCustomSelectionId(rawLabel: string): string | null {
+  const normalized = rawLabel.replace(/\s+/g, " ").trim().slice(0, MAX_CUSTOM_LABEL_LENGTH);
+  if (normalized.length < 2) return null;
+  return `${CUSTOM_ID_PREFIX}${encodeURIComponent(normalized.toLowerCase())}`;
+}
+
+export function getCustomSelectionLabel(id: string): string {
+  if (!isCustomSelectionId(id)) return id;
+  try {
+    return decodeURIComponent(id.slice(CUSTOM_ID_PREFIX.length));
+  } catch {
+    return id.slice(CUSTOM_ID_PREFIX.length);
+  }
+}
+
 export function clampQuantity(value: number): number {
   if (!Number.isFinite(value)) return MIN_SEAT_QTY;
   return Math.min(MAX_SEAT_QTY, Math.max(MIN_SEAT_QTY, Math.trunc(value)));
@@ -51,6 +73,42 @@ export function addCatalogSelection(
 ): CatalogSelection[] {
   if (isSelected(selections, id)) return [...selections];
   return toggleCatalogSelection(selections, id);
+}
+
+export function addCustomSelection(
+  selections: readonly CatalogSelection[],
+  rawLabel: string
+): { next: CatalogSelection[]; addedId: string | null } {
+  const cleanLabel = rawLabel.replace(/\s+/g, " ").trim().slice(0, MAX_CUSTOM_LABEL_LENGTH);
+  if (cleanLabel.length < 2) {
+    return { next: [...selections], addedId: null };
+  }
+
+  // Prefer matching an existing catalog item if the user typed an exact label
+  const exactCatalog = Array.from(CATALOG_MAP.values()).find(
+    (item) => item.label.toLowerCase() === cleanLabel.toLowerCase()
+  );
+  if (exactCatalog) {
+    return { next: addCatalogSelection(selections, exactCatalog.id), addedId: exactCatalog.id };
+  }
+
+  const customId = `${CUSTOM_ID_PREFIX}${encodeURIComponent(cleanLabel)}`;
+  const duplicate = selections.some((s) => s.id.toLowerCase() === customId.toLowerCase());
+  if (duplicate) {
+    return { next: [...selections], addedId: customId };
+  }
+
+  return {
+    next: [
+      ...selections,
+      {
+        id: customId,
+        quantity: 1,
+        billing: "Tahunan"
+      }
+    ],
+    addedId: customId
+  };
 }
 
 export function updateSelectionQuantity(
@@ -93,6 +151,7 @@ export function removeCatalogSelection(
 export interface ResolvedSelection {
   item: CatalogItem;
   selection: CatalogSelection;
+  isCustom: boolean;
 }
 
 export function resolveSelections(selections: readonly CatalogSelection[]): ResolvedSelection[] {
@@ -100,7 +159,29 @@ export function resolveSelections(selections: readonly CatalogSelection[]): Reso
   for (const selection of selections) {
     const item = CATALOG_MAP.get(selection.id);
     if (item) {
-      resolved.push({ item, selection });
+      resolved.push({ item, selection, isCustom: false });
+      continue;
+    }
+
+    if (isCustomSelectionId(selection.id)) {
+      const label = getCustomSelectionLabel(selection.id);
+      if (label.length >= 2) {
+        resolved.push({
+          selection,
+          isCustom: true,
+          item: {
+            id: selection.id,
+            cat: "services",
+            icon: "phd-stack",
+            isBrand: false,
+            label,
+            sub: "Permintaan Khusus",
+            type: "license",
+            defaultQty: 1,
+            defaultBilling: "Tahunan"
+          }
+        });
+      }
     }
   }
   return resolved;
@@ -119,16 +200,18 @@ export function toInquiryItems(selections: readonly CatalogSelection[]): Selecte
 export function buildQuoteNote(selections: readonly CatalogSelection[]): string {
   const resolved = resolveSelections(selections);
   if (resolved.length === 0) {
-    return "Mohon konsultasi kebutuhan website, desain UI/UX, atau lisensi software resmi untuk tim kami.";
+    return "Mohon konsultasi kebutuhan website, desain UI/UX, atau lisensi software untuk tim kami.";
   }
 
-  const lines = resolved.map(({ item, selection }) =>
-    item.type === "project"
-      ? `- ${item.label} (Proyek Custom)`
-      : `- ${item.label}: ${selection.quantity} akun · ${selection.billing}`
-  );
+  const lines = resolved.map(({ item, selection, isCustom }) => {
+    if (item.type === "project") {
+      return `- ${item.label} (Proyek Custom)`;
+    }
+    const suffix = isCustom ? " [Di luar katalog]" : "";
+    return `- ${item.label}${suffix}: ${selection.quantity} akun · ${selection.billing}`;
+  });
 
-  return `Mohon penawaran harga fix dalam Rupiah untuk kebutuhan berikut:\n${lines.join("\n")}`;
+  return `Mohon penawaran harga dalam Rupiah untuk kebutuhan berikut:\n${lines.join("\n")}`;
 }
 
 export function serializeQuoteSelections(selections: readonly CatalogSelection[]): string {
@@ -148,12 +231,28 @@ export function parseQuoteSelections(raw: string | null): CatalogSelection[] | n
     const [idRaw, qtyRaw, periodRaw] = part.split(":");
     const id = idRaw?.trim();
     if (!id || seen.has(id)) continue;
-    const item = CATALOG_MAP.get(id);
-    if (!item) continue;
-    seen.add(id);
-    const qty = item.type === "project" ? 1 : clampQuantity(Number(qtyRaw ?? item.defaultQty));
-    const billing: BillingPeriod = periodRaw === "m" ? "Bulanan" : "Tahunan";
-    parsed.push({ id, quantity: qty, billing });
+
+    const catalogItem = CATALOG_MAP.get(id);
+    if (catalogItem) {
+      seen.add(id);
+      const qty =
+        catalogItem.type === "project"
+          ? 1
+          : clampQuantity(Number(qtyRaw ?? catalogItem.defaultQty));
+      const billing: BillingPeriod = periodRaw === "m" ? "Bulanan" : "Tahunan";
+      parsed.push({ id, quantity: qty, billing });
+      continue;
+    }
+
+    if (isCustomSelectionId(id)) {
+      const label = getCustomSelectionLabel(id).trim();
+      if (label.length >= 2) {
+        seen.add(id);
+        const qty = clampQuantity(Number(qtyRaw ?? 1));
+        const billing: BillingPeriod = periodRaw === "m" ? "Bulanan" : "Tahunan";
+        parsed.push({ id, quantity: qty, billing });
+      }
+    }
   }
 
   return parsed.length > 0 ? parsed : null;

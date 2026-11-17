@@ -274,8 +274,9 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
       // Local static `astro preview` serves dist/ without Cloudflare Pages Functions
       if (response.status === 404 || response.status === 405) {
         setToast({
-          kind: "success",
-          message: `Permintaan dari ${validated.data.company} sudah tervalidasi rapi. Saat berjalan di Cloudflare Pages, formulir otomatis terkirim ke email ${COMPANY.email}. Anda juga bisa langsung kirim lewat WhatsApp atau email di bawah:`,
+          kind: "error",
+          message:
+            "Mode pratinjau statis tidak menjalankan server pengirim email. Saat live di Cloudflare Pages, formulir terkirim otomatis—atau lanjutkan langsung lewat jalur kontak di bawah:",
           ...directLinks
         });
         return;
@@ -290,7 +291,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
           kind: "error",
           message: !data.ok
             ? data.message
-            : `Terjadi kendala pengiriman. Anda tetap bisa hubungi WhatsApp ${COMPANY.whatsappDisplay} atau email ${COMPANY.email}.`,
+            : "Pengiriman sedang terkendala. Silakan lanjutkan langsung lewat WhatsApp atau email di bawah:",
           ...directLinks
         });
         return;
@@ -299,8 +300,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
       setToast({
         kind: "success",
         message: data.summary,
-        inquiryId: data.inquiryId,
-        ...directLinks
+        inquiryId: data.inquiryId
       });
 
       if (TURNSTILE_SITE_KEY && turnstileWidgetIdRef.current && window.turnstile) {
@@ -312,7 +312,8 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
     } catch {
       setToast({
         kind: "error",
-        message: `Koneksi terganggu. Silakan coba lagi atau lanjutkan langsung ke WhatsApp ${COMPANY.whatsappDisplay} / email ${COMPANY.email}.`,
+        message:
+          "Koneksi sedang terganggu. Silakan coba lagi atau lanjutkan langsung lewat WhatsApp atau email di bawah:",
         ...directLinks
       });
     } finally {
@@ -331,10 +332,10 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
     >
       {variant === "home" && (
         <div>
-          <h3>Kirim pesan langsung ke tim kami</h3>
+          <h3>Kirim permintaan penawaran</h3>
           <p>
-            Permintaan diteruskan ke <strong>{COMPANY.email}</strong> atau lanjut chat via WhatsApp{" "}
-            <strong>{COMPANY.whatsappDisplay}</strong>.
+            Ceritakan kebutuhan proyek atau daftar software Anda—tim kami akan membalas dengan
+            estimasi resmi.
           </p>
         </div>
       )}
@@ -417,9 +418,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
 
       <div className={`field ${fieldErrors.notes ? "has-error" : ""}`}>
         <label htmlFor={`${prefix}-notes`}>
-          {variant === "home"
-            ? "Rincian Website, Desain, atau Daftar Software"
-            : "Rincian Kebutuhan atau Daftar Software"}
+          {variant === "home" ? "Rincian Proyek atau Daftar Software" : "Rincian Kebutuhan"}
         </label>
         <textarea
           id={`${prefix}-notes`}
@@ -428,7 +427,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
           className={flashNotes ? "field-flash" : ""}
           placeholder={
             variant === "home"
-              ? "Misal: Minta harga 2 Adobe CC Pro, 3 ChatGPT Team, atau konsultasi website perusahaan..."
+              ? "Misal: 2 Adobe CC Pro, 3 ChatGPT Team, atau konsultasi website perusahaan..."
               : "Misal: 2 akun Adobe CC Pro, 5 Canva Business, 3 ChatGPT Team, dan website company profile..."
           }
           value={notes}
@@ -444,11 +443,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
         <div className="antispam-head">
           <span className="antispam-badge">
             <SpriteIcon id="phd-shield-check" className="ph-icon ph-icon-xs" />
-            <span>
-              {TURNSTILE_SITE_KEY
-                ? "Verifikasi Keamanan Cloudflare Turnstile"
-                : "Verifikasi Anti-Spam"}
-            </span>
+            <span>{TURNSTILE_SITE_KEY ? "Verifikasi Keamanan" : "Verifikasi Anti-Spam"}</span>
           </span>
           {!TURNSTILE_SITE_KEY && (
             <button
@@ -507,12 +502,12 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
         {submitting ? (
           <>
             <span className="btn-spinner" aria-hidden="true" />
-            <span>Mengirim pesan...</span>
+            <span>Mengirim...</span>
           </>
         ) : (
           <>
             <SpriteIcon id="ph-envelope" className="ph-icon ph-icon-sm" />
-            <span>{variant === "home" ? "Kirim Pesan Sekarang" : "Kirim ke Email & Tim"}</span>
+            <span>{variant === "home" ? "Kirim Permintaan" : "Kirim ke Tim Kami"}</span>
           </>
         )}
       </button>
@@ -527,7 +522,7 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
             {toast.message}
             {toast.inquiryId && <span className="rfq-id-tag">#{toast.inquiryId}</span>}
           </div>
-          {(toast.followUpWaUrl || toast.followUpMailtoUrl) && (
+          {toast.kind === "error" && (toast.followUpWaUrl || toast.followUpMailtoUrl) && (
             <div className="rfq-toast-actions">
               {toast.followUpWaUrl && (
                 <a
@@ -537,13 +532,13 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
                   rel="noopener noreferrer"
                 >
                   <SpriteIcon id="ph-whatsapp-logo" className="ph-icon ph-icon-xs" />
-                  <span>Chat WhatsApp {COMPANY.whatsappDisplay}</span>
+                  <span>Lanjut via WhatsApp</span>
                 </a>
               )}
               {toast.followUpMailtoUrl && (
                 <a className="btn btn-glass btn-sm" href={toast.followUpMailtoUrl}>
                   <SpriteIcon id="ph-envelope" className="ph-icon ph-icon-xs" />
-                  <span>Buka Email</span>
+                  <span>Kirim via Email</span>
                 </a>
               )}
             </div>

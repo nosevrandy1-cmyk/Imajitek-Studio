@@ -17,17 +17,17 @@ import InquiryForm from "@/components/islands/InquiryForm";
       Pembuatan web, desain produk, dan <span class="hl">lisensi software resmi</span>.
     </h1>
     <p class="hero-sub">
-      Kami mengerjakan website dan aplikasi web, desain antarmuka di Figma, serta bantu pembelian
-      lisensi software kreatif dan AI resmi dengan pembayaran Rupiah.
+      Kami mengerjakan website dan aplikasi web, desain antarmuka di Figma, serta pengadaan lisensi
+      software kreatif dan AI resmi dengan pembayaran Rupiah.
     </p>
     <div class="hero-ctas">
       <button type="button" class="btn btn-nvidia" id="hero-inquire-btn">
+        <span>Ajukan Kebutuhan</span>
         <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-          <use href="#ph-whatsapp-logo"></use>
+          <use href="#ph-arrow-right"></use>
         </svg>
-        <span>Kirim Pesan Kebutuhan</span>
       </button>
-      <a class="btn btn-glass" href="#home-catalog">Cek Katalog Software</a>
+      <a class="btn btn-glass" href="#home-catalog">Lihat Katalog Software</a>
     </div>
 
     <HeroLauncher client:load />
@@ -37,8 +37,8 @@ import InquiryForm from "@/components/islands/InquiryForm";
     <div class="section-head">
       <h2 class="section-title">Katalog software resmi &amp; layanan siap pesan</h2>
       <p class="section-desc">
-        Klik logo atau pilih per kategori, atur jumlah akun masing-masing software, lalu kirim
-        daftar ke formulir penawaran di bawah.
+        Pilih software atau layanan dari daftar, sesuaikan jumlah akun, atau tambahkan kebutuhan
+        khusus sebelum mengirim permintaan penawaran.
       </p>
     </div>
 
@@ -52,8 +52,10 @@ import InquiryForm from "@/components/islands/InquiryForm";
     <div class="home-engage-grid">
       <div>
         <div class="section-head align-left" style="margin-bottom:20px;">
-          <h2 class="section-title">Pertanyaan yang sering ditanyakan</h2>
-          <p class="section-desc">Klik pertanyaan untuk membuka detailnya.</p>
+          <h2 class="section-title">Pertanyaan yang sering diajukan</h2>
+          <p class="section-desc">
+            Ringkasan seputar aktivasi akun, penawaran harga, dan kepemilikan aset proyek.
+          </p>
         </div>
         <FaqAccordion client:visible />
       </div>
@@ -69,7 +71,7 @@ import InquiryForm from "@/components/islands/InquiryForm";
   document.getElementById("hero-inquire-btn")?.addEventListener("click", () => {
     dispatchInquiryPrefill({
       notes:
-        "Halo Imajitek Studio, saya ingin berdiskusi tentang kebutuhan website, desain, atau lisensi software.",
+        "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
       scrollToId: "home-inquiry"
     });
   });
