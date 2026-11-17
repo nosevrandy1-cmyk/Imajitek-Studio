@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
+import { AnimatePresence, MotionConfig, motion } from "motion/react";
 import { CATALOG_CATEGORIES, CATALOG_ITEMS, type CatalogItem } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
 import { dispatchCatalogCustom, dispatchCatalogPick } from "@/lib/events";
@@ -86,114 +87,128 @@ export default function HeroLauncher() {
   };
 
   return (
-    <div className="hero-search-shell" ref={shellRef}>
-      <div className={`hero-search-bar ${showDropdown ? "is-open" : ""}`}>
-        <SpriteIcon id="ph-magnifying-glass" className="ph-icon hero-search-icon" />
-        <input
-          id="launcher-search"
-          className="hero-search-input"
-          type="search"
-          role="combobox"
-          aria-autocomplete="list"
-          value={search}
-          onFocus={() => setOpen(true)}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            setOpen(true);
-          }}
-          onKeyDown={handleKeyDown}
-          placeholder="Cari software atau layanan (Adobe, Canva, Claude, Web)..."
-          aria-label="Cari layanan atau lisensi software"
-          aria-expanded={showDropdown}
-          aria-controls="hero-search-results"
-          aria-activedescendant={
-            showDropdown && matches[activeIndex]
-              ? `hero-search-opt-${matches[activeIndex].id}`
-              : undefined
-          }
-          autoComplete="off"
-        />
-        {search.length > 0 ? (
-          <button
-            type="button"
-            className="hero-search-clear"
-            aria-label="Bersihkan pencarian"
-            onClick={() => {
-              setSearch("");
-              setOpen(false);
+    <MotionConfig reducedMotion="user">
+      <motion.div
+        className="hero-search-shell"
+        ref={shellRef}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 250, damping: 24, delay: 0.06 }}
+      >
+        <div className={`hero-search-bar ${showDropdown ? "is-open" : ""}`}>
+          <SpriteIcon id="ph-magnifying-glass" className="ph-icon hero-search-icon" />
+          <input
+            id="launcher-search"
+            className="hero-search-input"
+            type="search"
+            role="combobox"
+            aria-autocomplete="list"
+            value={search}
+            onFocus={() => setOpen(true)}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setOpen(true);
             }}
-          >
-            <SpriteIcon id="ph-x" className="ph-icon ph-icon-xs" />
-          </button>
-        ) : (
-          <span className="hero-search-kbd kbd-chip" aria-hidden="true">
-            &#8984;K
-          </span>
-        )}
-      </div>
-
-      {showDropdown && (
-        <div
-          id="hero-search-results"
-          className="hero-search-results"
-          role="listbox"
-          aria-label="Hasil pencarian layanan dan software"
-        >
-          {matches.length === 0 ? (
-            search.trim().length >= 2 ? (
-              <button
-                type="button"
-                role="option"
-                aria-selected="true"
-                className="hero-search-item is-highlighted"
-                onClick={addCustomQuery}
-              >
-                <span className="hero-search-item-left">
-                  <SpriteIcon id="phd-stack" className="ph-icon ph-icon-sm" />
-                  <span className="hero-search-item-text">
-                    <strong>+ Tambahkan &ldquo;{search.trim()}&rdquo;</strong>
-                    <small>Masukkan sebagai kebutuhan khusus di luar katalog standar</small>
-                  </span>
-                </span>
-                <span className="hero-search-item-cat">Kebutuhan Khusus</span>
-              </button>
-            ) : (
-              <div className="hero-search-empty">
-                Ketik minimal 2 huruf untuk mencari atau menambahkan software.
-              </div>
-            )
+            onKeyDown={handleKeyDown}
+            placeholder="Cari software atau layanan (Adobe, Canva, Claude, Web)..."
+            aria-label="Cari layanan atau lisensi software"
+            aria-expanded={showDropdown}
+            aria-controls="hero-search-results"
+            aria-activedescendant={
+              showDropdown && matches[activeIndex]
+                ? `hero-search-opt-${matches[activeIndex].id}`
+                : undefined
+            }
+            autoComplete="off"
+          />
+          {search.length > 0 ? (
+            <button
+              type="button"
+              className="hero-search-clear"
+              aria-label="Bersihkan pencarian"
+              onClick={() => {
+                setSearch("");
+                setOpen(false);
+              }}
+            >
+              <SpriteIcon id="ph-x" className="ph-icon ph-icon-xs" />
+            </button>
           ) : (
-            matches.map((item, idx) => {
-              const catLabel = CATEGORY_LABEL_MAP.get(item.cat) ?? "Layanan";
-              const isHighlighted = idx === activeIndex;
-              return (
-                <button
-                  key={item.id}
-                  id={`hero-search-opt-${item.id}`}
-                  type="button"
-                  role="option"
-                  aria-selected={isHighlighted}
-                  className={`hero-search-item ${isHighlighted ? "is-highlighted" : ""}`}
-                  onMouseEnter={() => setActiveIndex(idx)}
-                  onClick={() => selectItem(item)}
-                >
-                  <span className="hero-search-item-left">
-                    <SpriteIcon
-                      id={item.icon}
-                      className={item.isBrand ? "brand-svg brand-svg-sm" : "ph-icon ph-icon-sm"}
-                    />
-                    <span className="hero-search-item-text">
-                      <strong>{item.label}</strong>
-                      <small>{item.sub}</small>
-                    </span>
-                  </span>
-                  <span className="hero-search-item-cat">{catLabel}</span>
-                </button>
-              );
-            })
+            <span className="hero-search-kbd kbd-chip" aria-hidden="true">
+              &#8984;K
+            </span>
           )}
         </div>
-      )}
-    </div>
+
+        <AnimatePresence>
+          {showDropdown && (
+            <motion.div
+              id="hero-search-results"
+              className="hero-search-results"
+              role="listbox"
+              aria-label="Hasil pencarian layanan dan software"
+              initial={{ opacity: 0, y: -4, scale: 0.99 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -4, scale: 0.99 }}
+              transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            >
+              {matches.length === 0 ? (
+                search.trim().length >= 2 ? (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected="true"
+                    className="hero-search-item is-highlighted"
+                    onClick={addCustomQuery}
+                  >
+                    <span className="hero-search-item-left">
+                      <SpriteIcon id="phd-stack" className="ph-icon ph-icon-sm" />
+                      <span className="hero-search-item-text">
+                        <strong>+ Tambahkan &ldquo;{search.trim()}&rdquo;</strong>
+                        <small>Masukkan sebagai kebutuhan khusus di luar katalog standar</small>
+                      </span>
+                    </span>
+                    <span className="hero-search-item-cat">Kebutuhan Khusus</span>
+                  </button>
+                ) : (
+                  <div className="hero-search-empty">
+                    Ketik minimal 2 huruf untuk mencari atau menambahkan software.
+                  </div>
+                )
+              ) : (
+                matches.map((item, idx) => {
+                  const catLabel = CATEGORY_LABEL_MAP.get(item.cat) ?? "Layanan";
+                  const isHighlighted = idx === activeIndex;
+                  return (
+                    <button
+                      key={item.id}
+                      id={`hero-search-opt-${item.id}`}
+                      type="button"
+                      role="option"
+                      aria-selected={isHighlighted}
+                      className={`hero-search-item ${isHighlighted ? "is-highlighted" : ""}`}
+                      onMouseEnter={() => setActiveIndex(idx)}
+                      onClick={() => selectItem(item)}
+                    >
+                      <span className="hero-search-item-left">
+                        <SpriteIcon
+                          id={item.icon}
+                          className={item.isBrand ? "brand-svg brand-svg-sm" : "ph-icon ph-icon-sm"}
+                        />
+                        <span className="hero-search-item-text">
+                          <strong>{item.label}</strong>
+                          <small>{item.sub}</small>
+                        </span>
+                      </span>
+                      <span className="hero-search-item-cat">{catLabel}</span>
+                    </button>
+                  );
+                })
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </MotionConfig>
   );
 }

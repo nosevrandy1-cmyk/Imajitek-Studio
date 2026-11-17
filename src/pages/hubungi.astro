@@ -2,106 +2,111 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import InquiryForm from "@/components/islands/InquiryForm";
 import { COMPANY } from "@/domain/catalog";
+
+const contactPageSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  name: `Hubungi ${COMPANY.brandName}`,
+  url: `${COMPANY.siteUrl}/hubungi`,
+  mainEntity: { "@id": `${COMPANY.siteUrl}/#organization` }
+});
 ---
 
 <BaseLayout
   title="Info Pembelian & Hubungi Kami | Imajitek Studio"
-  description="Hubungi Imajitek Studio melalui WhatsApp +62 813-3887-6110, email imajistudio.id@gmail.com, atau kunjungi Jl. Kertamukti No. 64. Formulir permintaan penawaran resmi dilindungi anti-spam."
+  description="Hubungi Imajitek Studio melalui WhatsApp +62 813-3887-6110, email imajistudio.id@gmail.com, atau kunjungi Jl. Kertamukti No. 64 untuk konsultasi website, Figma, dan penawaran lisensi resmi Rupiah."
+  keywords="kontak Imajitek Studio, penawaran Adobe resmi Rupiah, jasa website Jakarta, PT Imaji Teknologi Bersama, Jl. Kertamukti No. 64"
   canonicalPath="/hubungi"
 >
-  <div class="view-header">
-    <div>
-      <div class="view-breadcrumb">
-        <a href="/">Beranda</a>
-        <span>/</span>
-        <span>Info &amp; Hubungi Kami</span>
+  <script slot="head" type="application/ld+json" set:html={contactPageSchema} />
+  <section class="page-hero-band">
+    <div class="container">
+      <div class="page-intro">
+        <div class="page-intro-copy">
+          <span class="section-eyebrow tabular">KONTAK &amp; PENAWARAN</span>
+          <h1>Diskusikan Kebutuhan Proyek atau Lisensi Tim</h1>
+          <p>
+            Tuliskan ruang lingkup website, desain Figma, atau jumlah kursi software yang dibutuhkan
+            agar kami siapkan estimasi resmi dalam Rupiah.
+          </p>
+        </div>
+        <div class="page-intro-aside">
+          <span class="page-fact-pill">Respon di jam kerja · {COMPANY.address}</span>
+        </div>
       </div>
-      <h1>Info Pembelian &amp; Konsultasi Proyek</h1>
-      <p>
-        Hubungi kami melalui kanal resmi di bawah atau kirim rincian kebutuhan Anda lewat formulir
-        penawaran.
-      </p>
     </div>
-  </div>
+  </section>
 
-  <section class="section-compact">
-    <div class="rfq-section">
-      <div>
-        <h2
-          style="margin:0 0 12px;font-size:28px;line-height:1.18;letter-spacing:-0.03em;text-wrap:balance;"
-        >
-          Ceritakan kebutuhan website, desain, atau software Anda
-        </h2>
-        <p style="margin:0 0 22px;color:var(--ink-secondary);font-size:15px;">
-          Tulis rincian proyek atau daftar lisensi beserta jumlah penggunanya agar kami siapkan
-          estimasi yang tepat.
-        </p>
+  <section class="section-compact band-surface">
+    <div class="container">
+      <div class="rfq-section">
+        <div>
+          <div class="contact-direct-list">
+            <a
+              class="contact-direct-card"
+              href={COMPANY.whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="contact-direct-icon">
+                <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+                  <use href="#ph-whatsapp-logo"></use>
+                </svg>
+              </span>
+              <span class="contact-direct-meta">
+                <small>WhatsApp Resmi</small>
+                <strong>{COMPANY.whatsappDisplay}</strong>
+              </span>
+            </a>
 
-        <div class="contact-direct-list">
-          <a
-            class="contact-direct-card"
-            href={COMPANY.whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="contact-direct-icon">
-              <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-                <use href="#ph-whatsapp-logo"></use>
-              </svg>
-            </span>
-            <span class="contact-direct-meta">
-              <small>WhatsApp Resmi</small>
-              <strong>{COMPANY.whatsappDisplay}</strong>
-            </span>
-          </a>
+            <a class="contact-direct-card" href={`mailto:${COMPANY.email}`}>
+              <span class="contact-direct-icon">
+                <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+                  <use href="#ph-envelope"></use>
+                </svg>
+              </span>
+              <span class="contact-direct-meta">
+                <small>Email Resmi</small>
+                <strong>{COMPANY.email}</strong>
+              </span>
+            </a>
 
-          <a class="contact-direct-card" href={`mailto:${COMPANY.email}`}>
-            <span class="contact-direct-icon">
-              <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-                <use href="#ph-envelope"></use>
-              </svg>
-            </span>
-            <span class="contact-direct-meta">
-              <small>Email Resmi</small>
-              <strong>{COMPANY.email}</strong>
-            </span>
-          </a>
-
-          <a
-            class="contact-direct-card"
-            href={COMPANY.mapsUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="contact-direct-icon">
-              <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-                <use href="#ph-map-pin"></use>
-              </svg>
-            </span>
-            <span class="contact-direct-meta">
-              <small>Alamat Studio &amp; Kantor</small>
-              <strong>{COMPANY.address}</strong>
-            </span>
-          </a>
-        </div>
-
-        <div class="rfq-checklist" style="margin-top:18px;">
-          <div class="rfq-check-item">
-            <svg class="ph-icon" aria-hidden="true"><use href="#ph-check-circle"></use></svg>
-            <span>Aktivasi lisensi langsung ke email Anda atau tim</span>
+            <a
+              class="contact-direct-card"
+              href={COMPANY.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span class="contact-direct-icon">
+                <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+                  <use href="#ph-map-pin"></use>
+                </svg>
+              </span>
+              <span class="contact-direct-meta">
+                <small>Alamat Studio &amp; Kantor</small>
+                <strong>{COMPANY.address}</strong>
+              </span>
+            </a>
           </div>
-          <div class="rfq-check-item">
-            <svg class="ph-icon" aria-hidden="true"><use href="#ph-brackets-curly"></use></svg>
-            <span>Serah terima penuh repositori Git &amp; file Figma</span>
-          </div>
-          <div class="rfq-check-item">
-            <svg class="ph-icon" aria-hidden="true"><use href="#phd-shield-check"></use></svg>
-            <span>Dilindungi verifikasi anti-spam &amp; enkripsi HTTPS</span>
+
+          <div class="rfq-checklist" style="margin-top:20px;">
+            <div class="rfq-check-item">
+              <svg class="ph-icon" aria-hidden="true"><use href="#ph-check-circle"></use></svg>
+              <span>Aktivasi lisensi langsung ke email Anda atau tim</span>
+            </div>
+            <div class="rfq-check-item">
+              <svg class="ph-icon" aria-hidden="true"><use href="#ph-brackets-curly"></use></svg>
+              <span>Serah terima penuh repositori Git &amp; file Figma</span>
+            </div>
+            <div class="rfq-check-item">
+              <svg class="ph-icon" aria-hidden="true"><use href="#phd-shield-check"></use></svg>
+              <span>Dilindungi verifikasi anti-spam &amp; enkripsi HTTPS</span>
+            </div>
           </div>
         </div>
+
+        <InquiryForm variant="contact" client:load />
       </div>
-
-      <InquiryForm variant="contact" client:load />
     </div>
   </section>
 </BaseLayout>

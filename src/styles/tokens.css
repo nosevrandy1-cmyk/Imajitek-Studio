@@ -6,11 +6,14 @@
 :root {
   color-scheme: light;
   --bg-base: #fafbfa;
+  --bg-band-hero: #fcfdfb;
+  --bg-band-surface: #eef3ea;
+  --bg-band-light: #ffffff;
   --bg-elevated: #ffffff;
   --bg-card: #ffffff;
   --bg-surface: #f4f6f3;
   --bg-surface-hover: #ebefe9;
-  --bg-recessed: #f2f4f0;
+  --bg-recessed: #e7ede3;
   --bg-window: #ffffff;
 
   --nav-pill-bg: rgba(255, 255, 255, 0.94);

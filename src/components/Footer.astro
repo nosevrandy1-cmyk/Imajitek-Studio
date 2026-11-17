@@ -4,9 +4,35 @@ import { COMPANY } from "@/domain/catalog";
 
 <footer class="site-footer">
   <div class="footer-wrap">
+    <div class="footer-lead">
+      <div class="footer-lead-copy">
+        <span class="footer-eyebrow tabular">{COMPANY.legalName}</span>
+        <h2>Siap merapikan kebutuhan web, desain, dan lisensi tim Anda?</h2>
+      </div>
+      <div class="footer-lead-actions">
+        <a class="footer-btn-primary" href="/hubungi">
+          <span>Minta Penawaran</span>
+          <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+            <use href="#ph-arrow-right"></use>
+          </svg>
+        </a>
+        <a
+          class="footer-btn-secondary"
+          href={COMPANY.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+            <use href="#ph-whatsapp-logo"></use>
+          </svg>
+          <span>Chat WhatsApp</span>
+        </a>
+      </div>
+    </div>
+
     <div class="footer-grid">
       <div class="footer-brand-col">
-        <a class="brand" href="/" aria-label="Kembali ke Beranda">
+        <a class="brand footer-brand-link" href="/" aria-label="Kembali ke Beranda">
           <img
             src="/logo-itb-green.png"
             alt="Logo Imajitek Studio"
@@ -14,11 +40,11 @@ import { COMPANY } from "@/domain/catalog";
             height="24"
             class="brand-logo"
           />
-          <span>{COMPANY.legalName}</span>
+          <span>{COMPANY.brandName}</span>
         </a>
         <p>
-          Studio web development, desain produk di Figma, dan pengadaan lisensi software kreatif
-          &amp; AI resmi untuk kebutuhan personal maupun tim perusahaan.
+          Studio web development, desain UI/UX di Figma, dan pengadaan lisensi software kreatif
+          &amp; AI resmi dengan pembayaran Rupiah.
         </p>
         <div class="footer-contact-links">
           <a
@@ -87,5 +113,9 @@ import { COMPANY } from "@/domain/catalog";
       <span>&copy; {COMPANY.copyrightYear} {COMPANY.legalName}. Seluruh hak cipta dilindungi.</span>
       <span>{COMPANY.brandName} · {COMPANY.address}</span>
     </div>
+  </div>
+
+  <div class="footer-wordmark-wrap" aria-hidden="true">
+    <div class="footer-wordmark">IMAJITEK STUDIO</div>
   </div>
 </footer>

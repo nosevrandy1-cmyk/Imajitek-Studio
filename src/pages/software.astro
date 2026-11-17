@@ -2,44 +2,102 @@
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import CatalogBuilder from "@/components/islands/CatalogBuilder";
 import ScenariosSwitcher from "@/components/islands/ScenariosSwitcher";
+import { CATALOG_ITEMS, COMPANY, SOFTWARE_SUITE_DIRECTORY } from "@/domain/catalog";
+
+const catalogSchema = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "Katalog Lisensi Software & AI Resmi Imajitek Studio",
+  url: `${COMPANY.siteUrl}/software`,
+  provider: { "@id": `${COMPANY.siteUrl}/#organization` },
+  itemListElement: [
+    ...CATALOG_ITEMS.map((item, idx) => ({
+      "@type": "ListItem",
+      position: idx + 1,
+      item: {
+        "@type": item.type === "license" ? "SoftwareApplication" : "Service",
+        name: item.label,
+        description: item.sub
+      }
+    })),
+    ...SOFTWARE_SUITE_DIRECTORY.map((suite, idx) => ({
+      "@type": "ListItem",
+      position: CATALOG_ITEMS.length + idx + 1,
+      item: {
+        "@type": "SoftwareApplication",
+        name: suite.suite,
+        applicationCategory: suite.vendor,
+        featureList: suite.includedTools.join(", "),
+        description: suite.summary
+      }
+    }))
+  ]
+});
 ---
 
 <BaseLayout
   title="Katalog Software & AI Resmi | Imajitek Studio"
-  description="Pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva Business, Magnific, Envato Elements, Figma, ChatGPT Team, Claude Team, dan Google Gemini dengan pembayaran Rupiah."
+  description="Pengadaan lisensi resmi Adobe Creative Cloud Pro (Photoshop, Illustrator, Premiere Pro, After Effects), Canva Business, Magnific, Envato Elements, Figma, Autodesk, ChatGPT Team, Claude, Google Gemini, Microsoft 365, dan JetBrains."
+  keywords="beli lisensi Adobe resmi Indonesia, Adobe Creative Cloud Pro, Photoshop, Illustrator, Premiere Pro, After Effects, Acrobat Pro, Canva Pro, Canva Business, Magnific AI, Envato Elements, ChatGPT Team, Claude Team, Google Gemini, Figma Organization, Microsoft 365 Business, Google Workspace, Autodesk AutoCAD, JetBrains, GitHub Team, Cloudflare Business"
   canonicalPath="/software"
 >
-  <div class="view-header">
-    <div>
-      <div class="view-breadcrumb">
-        <a href="/">Beranda</a>
-        <span>/</span>
-        <span>Katalog Software &amp; AI</span>
+  <script slot="head" type="application/ld+json" set:html={catalogSchema} />
+  <section class="page-hero-band">
+    <div class="container">
+      <div class="page-intro">
+        <div class="page-intro-copy">
+          <span class="section-eyebrow tabular">KATALOG LISENSI RESMI</span>
+          <h1>Software Kreatif, AI &amp; Tim</h1>
+          <p>
+            Pilih paket software atau tuliskan kebutuhan khusus di luar daftar untuk kami siapkan
+            penawaran harga final dalam Rupiah.
+          </p>
+        </div>
+        <div class="page-intro-aside">
+          <span class="page-fact-pill">Aktivasi langsung ke email kantor</span>
+          <span class="page-fact-pill">Invoice Rupiah · PT resmi</span>
+        </div>
       </div>
-      <h1>Lisensi Software Kreatif, AI &amp; Tim</h1>
-      <p>
-        Pilih software yang Anda butuhkan atau tambahkan kebutuhan khusus di bawah daftar. Kami
-        siapkan penawaran harga final dalam Rupiah sesuai paket pilihan Anda.
-      </p>
     </div>
-    <a class="btn btn-nvidia" href="/hubungi?topic=Pembelian%20Lisensi%20Software%20%26%20AI">
-      <span>Minta Penawaran Resmi</span>
-      <svg class="ph-icon ph-icon-sm" aria-hidden="true">
-        <use href="#ph-arrow-right"></use>
-      </svg>
-    </a>
-  </div>
+  </section>
 
-  <section class="section-compact">
-    <CatalogBuilder mode="contact" showMarquee={false} client:load />
+  <section class="section-compact band-surface">
+    <div class="container">
+      <CatalogBuilder showMarquee={false} client:load />
 
-    <div class="section-head align-left" style="margin-top:52px;margin-bottom:20px;">
-      <h2 class="section-title">Contoh kombinasi paket untuk tim</h2>
-      <p class="section-desc">
-        Lihat skenario pengadaan lintas desain, AI, dan pengembangan web yang sering digabung dalam
-        satu tagihan.
-      </p>
+      <div class="section-head align-left" style="margin-top:52px;margin-bottom:20px;">
+        <h2 class="section-title">Contoh kombinasi paket untuk tim</h2>
+        <p class="section-desc">
+          Lihat skenario pengadaan lintas desain, AI, dan pengembangan web yang sering digabung
+          dalam satu tagihan.
+        </p>
+      </div>
+      <ScenariosSwitcher client:visible />
+
+      <div class="section-head align-left" style="margin-top:56px;margin-bottom:20px;">
+        <h2 class="section-title">Cakupan vendor &amp; aplikasi yang tersedia</h2>
+        <p class="section-desc">
+          Rincian vendor beserta aplikasi di dalamnya yang dapat diaktifkan langsung ke email
+          perusahaan maupun perorangan melalui PT Imaji Teknologi Bersama.
+        </p>
+      </div>
+
+      <div class="suite-dir-grid">
+        {
+          SOFTWARE_SUITE_DIRECTORY.map((entry) => (
+            <article class="suite-dir-card">
+              <span class="suite-dir-vendor">{entry.vendor}</span>
+              <h3>{entry.suite}</h3>
+              <p>{entry.summary}</p>
+              <ul class="suite-dir-tags">
+                {entry.includedTools.map((tool) => (
+                  <li>{tool}</li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
     </div>
-    <ScenariosSwitcher client:visible />
   </section>
 </BaseLayout>

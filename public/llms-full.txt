@@ -1,0 +1,49 @@
+# Imajitek Studio (PT Imaji Teknologi Bersama) — Referensi Lengkap Layanan & Lisensi Resmi
+
+Imajitek Studio adalah studio teknologi dan mitra pengadaan software resmi di bawah badan hukum PT Imaji Teknologi Bersama. Fokus kami mencakup dua pilar utama: pengembangan website & desain UI/UX di Figma, serta pengadaan lisensi software resmi dengan pembayaran dan invoice dalam Rupiah (IDR) bagi perusahaan, agensi, maupun pengguna perorangan di Indonesia.
+
+## 1. Pengadaan Lisensi Software Kreatif, AI & Produktivitas Tim
+Semua lisensi diaktifkan resmi langsung ke email pribadi atau email domain kantor klien (bukan akun sharing) dan dapat digabung dalam satu invoice Rupiah:
+
+### Adobe Creative Cloud Pro
+Mencakup paket tim maupun perorangan (All Apps dan Single App): Adobe Photoshop, Adobe Illustrator, Adobe Premiere Pro, Adobe After Effects, Adobe InDesign, Adobe Lightroom, Adobe Acrobat Pro, Adobe Audition, Adobe Media Encoder, dan Adobe XD.
+
+### Desain Grafis, Visual AI & Aset Stok
+- Canva Pro & Canva Business / Teams (beserta Brand Kit dan fitur kolaborasi tim)
+- Magnific AI (Upscaler visual resolusi tinggi, Style Transfer, Relight)
+- Envato Elements (Aset stok video, template motion graphics, font, foto, audio berlisensi)
+- Figma Organization & Professional (Design, Dev Mode, FigJam, Design System)
+- Autodesk Commercial (AutoCAD, Revit, 3ds Max, Fusion, Maya untuk arsitektur & rekayasa 3D)
+
+### AI Tools Resmi Perusahaan & Individu
+- OpenAI ChatGPT Plus & ChatGPT Team / Business
+- Anthropic Claude Pro & Claude Team
+- Google Gemini Advanced & Gemini for Google Workspace
+
+### Produktivitas Kantor, Developer & Infrastruktur
+- Microsoft 365 Business (Word, Excel, PowerPoint, Outlook, Microsoft Teams, OneDrive, email domain kantor)
+- Google Workspace Business (Gmail custom domain, Google Drive, Meet, Docs)
+- JetBrains All Products Pack (IntelliJ IDEA, WebStorm, PyCharm, PhpStorm, GoLand, Rider)
+- GitHub Team & Enterprise seats
+- Cloudflare Business / Pro
+- Pengadaan software khusus di luar daftar katalog sesuai permintaan (mis. Midjourney, Notion, Linear, Slack, Loom, dll.).
+
+## 2. Jasa Pembuatan Website & Desain UI/UX (Figma)
+- Website Company Profile, halaman kampanye pemasaran, dan katalog produk responsif berkecepatan tinggi.
+- Portal klien, dashboard internal, dan aplikasi web custom terintegrasi API.
+- Perancangan UI/UX Figma (wireframe, komponen Auto Layout, variabel warna/tipografi, Design System, dan prototipe interaktif).
+- Kepemilikan Penuh: Setelah proyek selesai, repositori kode Git, akses hosting/server, dan file master Figma diserahkan utuh kepada klien tanpa vendor lock-in.
+
+## 3. Tanya Jawab (FAQ)
+- **Apakah lisensi masuk langsung ke email kami?** Ya. Semua langganan Adobe, Canva, Magnific, Envato, ChatGPT, Claude, dan Gemini aktif langsung ke email pribadi atau domain kantor Anda, bukan akun sharing.
+- **Mengapa harga per akun tidak tampil langsung?** Kurs USD bersifat dinamis dan tiap vendor punya paket personal, tim, bulanan, maupun tahunan. Susun kebutuhan akun di katalog dan kami kirimkan rincian harga final dalam Rupiah.
+- **Bisakah gabung proyek web dan lisensi tim?** Bisa. Anda dapat memesan pembuatan website atau desain Figma secara terpisah maupun bersamaan dengan pengadaan software tim dalam satu penawaran.
+- **Apakah kode dan file Figma jadi milik kami?** Sepenuhnya milik Anda. Setelah proyek selesai, repositori Git, akses hosting/server, dan file master Figma diserahkan utuh ke akun Anda.
+- **Apakah tersedia invoice resmi dalam Rupiah?** Tersedia. Seluruh pengadaan dikelola oleh PT Imaji Teknologi Bersama dengan bukti transaksi dan penagihan resmi dalam mata uang Rupiah.
+
+## 4. Kontak Resmi
+- Situs: https://imajitek.pages.dev
+- Formulir Penawaran: https://imajitek.pages.dev/hubungi
+- WhatsApp: +62 813-3887-6110 (https://wa.me/6281338876110)
+- Email: imajistudio.id@gmail.com
+- Alamat: Jl. Kertamukti No. 64, Indonesia

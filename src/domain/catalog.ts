@@ -302,28 +302,139 @@ export type StudioSpecKey = keyof typeof STUDIO_SPECS;
 export interface FaqItem {
   question: string;
   answer: string;
+  imageSrc: string;
+  imageAlt: string;
 }
 
 export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
   {
-    question: "Apakah lisensi diaktifkan langsung ke email kami?",
+    question: "Apakah lisensi masuk langsung ke email kami?",
     answer:
-      "Ya. Semua langganan Adobe, Canva, Magnific, Envato, ChatGPT, Claude, dan Gemini masuk langsung ke email pribadi atau domain kantor Anda, bukan akun sharing."
+      "Ya. Semua langganan Adobe, Canva, Magnific, Envato, ChatGPT, Claude, dan Gemini aktif langsung ke email pribadi atau domain kantor Anda, bukan akun sharing.",
+    imageSrc: "/images/faq/faq-01.webp",
+    imageAlt:
+      "Meja kerja minimalis dengan laptop terbuka dan amplop aktivasi lisensi resmi ke email perusahaan"
   },
   {
-    question: "Mengapa harga per akun tidak dicantumkan langsung?",
+    question: "Mengapa harga per akun tidak tampil langsung?",
     answer:
-      "Karena kurs USD bersifat dinamis dan setiap vendor memiliki paket personal, tim, bulanan, maupun tahunan. Cukup atur kebutuhan akun di katalog, dan kami akan mengirimkan rincian harga final dalam Rupiah."
+      "Kurs USD bersifat dinamis dan tiap vendor punya paket personal, tim, bulanan, maupun tahunan. Susun kebutuhan akun di katalog dan kami kirimkan rincian harga final dalam Rupiah.",
+    imageSrc: "/images/faq/faq-02.webp",
+    imageAlt:
+      "Tablet estimasi, kalkulator meja, dan catatan perencanaan harga paket lisensi dalam Rupiah"
   },
   {
-    question: "Bisakah menggabungkan proyek web dan pengadaan lisensi?",
+    question: "Bisakah gabung proyek web dan lisensi tim?",
     answer:
-      "Bisa. Anda dapat memesan pembuatan website atau desain Figma secara terpisah maupun bersamaan dengan pengadaan software tim dalam satu penawaran."
+      "Bisa. Anda dapat memesan pembuatan website atau desain Figma secara terpisah maupun bersamaan dengan pengadaan software tim dalam satu penawaran.",
+    imageSrc: "/images/faq/faq-03.webp",
+    imageAlt:
+      "Monitor kerja dengan wireframe tata letak web, laptop, dan buku catatan desain UI/UX studio"
   },
   {
-    question: "Apakah kode website dan file Figma menjadi milik kami?",
+    question: "Apakah kode dan file Figma jadi milik kami?",
     answer:
-      "Sepenuhnya milik Anda. Setelah selesai, repositori Git, akses hosting/server, dan file master Figma diserahkan utuh ke akun Anda."
+      "Sepenuhnya milik Anda. Setelah proyek selesai, repositori Git, akses hosting/server, dan file master Figma diserahkan utuh ke akun Anda.",
+    imageSrc: "/images/faq/faq-04.webp",
+    imageAlt:
+      "Laptop, keyboard mekanikal, drive arsip, dan folder proyek serah terima kode dan file Figma"
+  },
+  {
+    question: "Bagaimana jika software tidak ada di daftar?",
+    answer:
+      "Anda dapat mengetikkan nama software atau kebutuhan jasa khusus di kolom pencarian Hero atau input tambahan di bawah daftar katalog untuk kami bantu carikan penawarannya.",
+    imageSrc: "/images/faq/faq-05.webp",
+    imageAlt:
+      "Buku catatan terbuka dan laptop untuk pencatatan permintaan pengadaan software khusus"
+  },
+  {
+    question: "Apakah tersedia invoice resmi dalam Rupiah?",
+    answer:
+      "Tersedia. Seluruh pengadaan dikelola oleh PT Imaji Teknologi Bersama dengan bukti transaksi dan penagihan resmi dalam mata uang Rupiah.",
+    imageSrc: "/images/faq/faq-06.webp",
+    imageAlt:
+      "Arsip binder dan map penagihan perusahaan untuk transaksi invoice resmi PT Imaji Teknologi Bersama"
+  }
+] as const;
+
+export interface SoftwareSuiteEntry {
+  vendor: string;
+  suite: string;
+  includedTools: readonly string[];
+  summary: string;
+}
+
+export const SOFTWARE_SUITE_DIRECTORY: readonly SoftwareSuiteEntry[] = [
+  {
+    vendor: "Adobe",
+    suite: "Adobe Creative Cloud Pro",
+    includedTools: [
+      "Adobe Photoshop",
+      "Adobe Illustrator",
+      "Adobe Premiere Pro",
+      "Adobe After Effects",
+      "Adobe InDesign",
+      "Adobe Lightroom",
+      "Adobe Acrobat Pro",
+      "Adobe Audition",
+      "Adobe XD"
+    ],
+    summary:
+      "Lisensi resmi Adobe All Apps maupun Single App langsung ke email perusahaan atau pribadi."
+  },
+  {
+    vendor: "Canva",
+    suite: "Canva Pro & Canva Business",
+    includedTools: ["Canva Pro", "Canva Teams / Business", "Brand Kit", "Magic Studio AI"],
+    summary:
+      "Langganan Canva resmi untuk tim marketing, desain konten media sosial, dan presentasi."
+  },
+  {
+    vendor: "Magnific & Envato",
+    suite: "Magnific AI & Envato Elements",
+    includedTools: [
+      "Magnific AI Upscaler",
+      "Magnific Relight & Style Transfer",
+      "Envato Elements",
+      "Video Stock, Font & Template"
+    ],
+    summary:
+      "Akses resmi generator/upscaler visual AI Magnific dan perpustakaan aset Envato Elements."
+  },
+  {
+    vendor: "Figma",
+    suite: "Figma Organization & Design System",
+    includedTools: ["Figma Design", "Figma Dev Mode", "FigJam", "Design System Tokens"],
+    summary:
+      "Lisensi kursi Figma tim maupun jasa pembuatan UI/UX dan komponen Auto Layout siap dev."
+  },
+  {
+    vendor: "AI Productivity",
+    suite: "ChatGPT, Claude & Google Gemini",
+    includedTools: [
+      "ChatGPT Plus",
+      "ChatGPT Team / Business",
+      "OpenAI",
+      "Claude Pro",
+      "Claude Team (Anthropic)",
+      "Google Gemini Advanced / Workspace"
+    ],
+    summary:
+      "Pengadaan akun AI resmi non-sharing dengan pembayaran Rupiah untuk perusahaan dan individu."
+  },
+  {
+    vendor: "Office, Cloud & Engineering",
+    suite: "Microsoft 365, Google Workspace, Autodesk, JetBrains & GitHub",
+    includedTools: [
+      "Microsoft 365 Business (Word, Excel, PowerPoint, Outlook, Teams)",
+      "Google Workspace (Gmail Bisnis, Drive, Meet)",
+      "Autodesk AutoCAD / Revit / 3ds Max / Fusion",
+      "JetBrains All Products (IntelliJ IDEA, WebStorm, PyCharm, PhpStorm)",
+      "GitHub Team",
+      "Cloudflare Business"
+    ],
+    summary:
+      "Kebutuhan email domain perusahaan, CAD/3D arsitektur, IDE developer, dan keamanan web."
   }
 ] as const;
 

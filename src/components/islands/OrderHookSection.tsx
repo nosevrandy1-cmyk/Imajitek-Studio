@@ -1,10 +1,16 @@
 import { useEffect, useState, type CSSProperties, type FocusEvent } from "react";
 import { ORDER_FEED_ITEMS } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
-import { dispatchInquiryPrefill } from "@/lib/events";
 
 const VISIBLE_SLOTS = [0, 1, 2, 3, 4] as const;
 const STEP_INTERVAL_MS = 2800;
+
+function navigateToInquiry(notes: string, topic: string): void {
+  const params = new URLSearchParams();
+  if (topic) params.set("topic", topic);
+  if (notes) params.set("notes", notes);
+  window.location.assign(`/hubungi?${params.toString()}`);
+}
 
 export default function OrderHookSection() {
   const [tick, setTick] = useState(0);
@@ -84,13 +90,7 @@ export default function OrderHookSection() {
                       type="button"
                       tabIndex={isExiting ? -1 : undefined}
                       className={`order-feed-row ${isFeatured ? "is-processing" : ""}`}
-                      onClick={() =>
-                        dispatchInquiryPrefill({
-                          notes: entry.prefillNote,
-                          topic: entry.prefillTopic,
-                          scrollToId: "home-inquiry"
-                        })
-                      }
+                      onClick={() => navigateToInquiry(entry.prefillNote, entry.prefillTopic)}
                       aria-label={`Mulai dari kebutuhan serupa: ${entry.detail}`}
                     >
                       <span className="order-row-code tabular">{entry.code}</span>
@@ -152,12 +152,10 @@ export default function OrderHookSection() {
             type="button"
             className="btn order-cta-btn"
             onClick={() =>
-              dispatchInquiryPrefill({
-                notes:
-                  "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
-                topic: "Website + Desain + Lisensi",
-                scrollToId: "home-inquiry"
-              })
+              navigateToInquiry(
+                "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
+                "Website + Desain + Lisensi"
+              )
             }
           >
             <span>Konsultasikan Kebutuhan</span>

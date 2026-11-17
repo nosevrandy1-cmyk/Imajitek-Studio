@@ -133,17 +133,46 @@ kbd {
 }
 
 .section-compact {
-  padding: 0 0 76px;
+  padding: 40px 0 76px;
+}
+
+.band-surface {
+  background: var(--bg-band-surface);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.band-light {
+  background: var(--bg-band-light);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.page-hero-band {
+  position: relative;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-compact.band-surface {
+  border-top: none;
 }
 
 .section-divider {
   border-top: 1px solid var(--border-subtle);
 }
 
-.view-header {
-  padding: 116px 0 34px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 40px;
+.section-eyebrow {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--nvidia-ink);
+}
+
+.page-intro {
+  padding: 102px 0 28px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
@@ -151,27 +180,13 @@ kbd {
   flex-wrap: wrap;
 }
 
-.view-breadcrumb {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--ink-muted);
-  margin-bottom: 10px;
+.page-intro-copy {
+  max-width: 640px;
 }
 
-.view-breadcrumb a {
-  color: var(--ink-secondary);
-}
-
-.view-breadcrumb a:hover {
-  color: var(--nvidia-ink);
-}
-
-.view-header h1 {
-  margin: 0 0 12px;
-  font-size: clamp(28px, 3.8vw, 40px);
+.page-intro-copy h1 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.4vw, 36px);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.14;
@@ -179,13 +194,31 @@ kbd {
   text-wrap: balance;
 }
 
-.view-header p {
+.page-intro-copy p {
   margin: 0;
-  max-width: 620px;
-  font-size: 16px;
+  font-size: 15.5px;
   color: var(--ink-secondary);
-  line-height: 1.7;
+  line-height: 1.65;
   text-wrap: pretty;
+}
+
+.page-intro-aside {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.page-fact-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ink-secondary);
 }
 
 .section-head {

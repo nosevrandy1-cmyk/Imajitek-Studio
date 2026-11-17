@@ -3,8 +3,10 @@ import {
   CATALOG_CATEGORIES,
   CATALOG_ITEMS,
   CATALOG_MAP,
+  HOME_FAQ_ITEMS,
   MARQUEE_BOTTOM_ROW,
-  MARQUEE_TOP_ROW
+  MARQUEE_TOP_ROW,
+  SOFTWARE_SUITE_DIRECTORY
 } from "@/domain/catalog";
 import {
   INITIAL_SELECTIONS,
@@ -47,6 +49,17 @@ describe("Catalog Domain Integrity", () => {
     for (const pill of [...MARQUEE_TOP_ROW, ...MARQUEE_BOTTOM_ROW]) {
       expect(CATALOG_MAP.has(pill.id)).toBe(true);
     }
+  });
+
+  it("ensures every FAQ item defines a lightweight WebP workspace photo and structured directory entries exist", () => {
+    expect(HOME_FAQ_ITEMS.length).toBe(6);
+    for (const item of HOME_FAQ_ITEMS) {
+      expect(item.imageSrc).toMatch(/^\/images\/faq\/faq-\d{2}\.webp$/);
+      expect(item.imageAlt.length).toBeGreaterThan(10);
+    }
+    const adobeSuite = SOFTWARE_SUITE_DIRECTORY.find((entry) => entry.vendor === "Adobe");
+    expect(adobeSuite?.includedTools).toContain("Adobe Photoshop");
+    expect(adobeSuite?.includedTools).toContain("Adobe Premiere Pro");
   });
 });
 
