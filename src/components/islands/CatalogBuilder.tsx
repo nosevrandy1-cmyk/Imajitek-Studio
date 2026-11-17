@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState, type SyntheticEvent } from "react";
+import UseAnimations from "react-useanimations";
+import trash2 from "react-useanimations/lib/trash2";
 import {
   CATALOG_CATEGORIES,
   CATALOG_ITEMS,
@@ -212,7 +214,7 @@ export default function CatalogBuilder({ showMarquee = true }: CatalogBuilderPro
         <div className="calc-summary">
           <div>
             <div className="calc-summary-head">
-              <span className="calc-summary-eyebrow">Ringkasan Kebutuhan</span>
+              <span className="calc-summary-eyebrow">Daftar Permintaan Anda</span>
               <span className="calc-summary-eyebrow tabular">{resolvedSelections.length} item</span>
             </div>
             <div className="calc-total tabular">
@@ -228,8 +230,8 @@ export default function CatalogBuilder({ showMarquee = true }: CatalogBuilderPro
           <div className="calc-breakdown">
             {resolvedSelections.length === 0 ? (
               <div className="calc-empty-box">
-                Pilih software atau layanan di sebelah kiri, atau tulis kebutuhan khusus di bawah
-                daftar.
+                Belum ada layanan atau software yang dipilih. Klik tombol tambah pada katalog untuk
+                menyusun kebutuhan Anda.
               </div>
             ) : (
               resolvedSelections.map(({ item, selection, isCustom }) => (
@@ -243,14 +245,25 @@ export default function CatalogBuilder({ showMarquee = true }: CatalogBuilderPro
                       <span>{item.label}</span>
                       {isCustom && <span className="calc-custom-badge">Di luar daftar</span>}
                     </div>
-                    <button
-                      type="button"
-                      className="calc-remove-btn"
-                      aria-label={`Hapus ${item.label}`}
-                      onClick={() => handleRemove(item.id)}
-                    >
-                      <SpriteIcon id="ph-x" className="ph-icon ph-icon-xs" />
-                    </button>
+                    <UseAnimations
+                      animation={trash2}
+                      interaction="hover"
+                      size={16}
+                      render={(eventProps, animationProps) => (
+                        <button
+                          type="button"
+                          className="calc-remove-btn"
+                          aria-label={`Hapus ${item.label}`}
+                          {...eventProps}
+                          onClick={(e) => {
+                            eventProps.onClick(e);
+                            handleRemove(item.id);
+                          }}
+                        >
+                          <span {...animationProps} />
+                        </button>
+                      )}
+                    />
                   </div>
 
                   <div className="calc-line-controls">
@@ -318,7 +331,7 @@ export default function CatalogBuilder({ showMarquee = true }: CatalogBuilderPro
             style={{ width: "100%" }}
             onClick={handleSubmitQuote}
           >
-            <span>Minta Penawaran</span>
+            <span>Minta Estimasi Harga</span>
             <SpriteIcon id="ph-arrow-right" className="ph-icon ph-icon-sm" />
           </button>
         </div>

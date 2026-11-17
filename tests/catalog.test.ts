@@ -6,7 +6,8 @@ import {
   HOME_FAQ_ITEMS,
   MARQUEE_BOTTOM_ROW,
   MARQUEE_TOP_ROW,
-  SOFTWARE_SUITE_DIRECTORY
+  SOFTWARE_SUITE_DIRECTORY,
+  WEB_DESAIN_TABS
 } from "@/domain/catalog";
 import {
   INITIAL_SELECTIONS,
@@ -60,6 +61,10 @@ describe("Catalog Domain Integrity", () => {
     const adobeSuite = SOFTWARE_SUITE_DIRECTORY.find((entry) => entry.vendor === "Adobe");
     expect(adobeSuite?.includedTools).toContain("Adobe Photoshop");
     expect(adobeSuite?.includedTools).toContain("Adobe Premiere Pro");
+    expect(WEB_DESAIN_TABS.map((t) => t.key)).toEqual(["W", "D", "S"]);
+    for (const tab of WEB_DESAIN_TABS) {
+      expect(tab.points.length).toBeGreaterThanOrEqual(3);
+    }
   });
 });
 

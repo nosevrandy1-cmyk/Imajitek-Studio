@@ -1,4 +1,6 @@
 import { useEffect, useState, type CSSProperties, type FocusEvent } from "react";
+import UseAnimations from "react-useanimations";
+import arrowRight from "react-useanimations/lib/arrowRight";
 import { ORDER_FEED_ITEMS } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
 
@@ -129,8 +131,8 @@ export default function OrderHookSection() {
         <div className="order-feed-foot">
           <h3>Pengadaan rapi dan langsung aktif ke akun Anda</h3>
           <p>
-            Setiap pembelian lisensi resmi maupun proyek web &amp; Figma tercatat per akun dan
-            dibayarkan dalam Rupiah.
+            Setiap pembelian langganan software resmi maupun proyek web &amp; desain grafis tercatat
+            rapi dengan pembayaran Rupiah.
           </p>
         </div>
       </div>
@@ -140,27 +142,31 @@ export default function OrderHookSection() {
           <span className="order-cta-icon" aria-hidden="true">
             <SpriteIcon id="phd-stack" className="ph-icon" />
           </span>
-          <h3>Satu partner untuk web, Figma, dan lisensi tim.</h3>
+          <h3>Satu partner untuk web, desain grafis, dan lisensi tim.</h3>
           <p>
-            Gabungkan pembuatan website, desain UI/UX, dan pengadaan software resmi dalam satu alur
+            Gabungkan pembuatan website, desain grafis, dan pengadaan software resmi dalam satu alur
             kerja tanpa mengurus vendor terpisah.
           </p>
         </div>
 
         <div className="order-cta-actions">
-          <button
-            type="button"
-            className="btn order-cta-btn"
+          <UseAnimations
+            animation={arrowRight}
+            interaction="hover"
+            size={18}
             onClick={() =>
               navigateToInquiry(
-                "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain UI/UX, atau lisensi software.",
-                "Website + Desain + Lisensi"
+                "Halo Imajitek Studio, saya ingin berkonsultasi mengenai kebutuhan website, desain grafis, atau lisensi software.",
+                "Pembuatan Web & Aplikasi"
               )
             }
-          >
-            <span>Konsultasikan Kebutuhan</span>
-            <SpriteIcon id="ph-arrow-right" className="ph-icon ph-icon-xs" />
-          </button>
+            render={(eventProps, animationProps) => (
+              <button type="button" className="btn order-cta-btn" {...eventProps}>
+                <span>Konsultasikan Kebutuhan</span>
+                <span {...animationProps} />
+              </button>
+            )}
+          />
         </div>
       </aside>
     </div>
