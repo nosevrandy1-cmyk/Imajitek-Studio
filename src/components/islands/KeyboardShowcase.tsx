@@ -1,16 +1,26 @@
 import { useEffect, useState } from "react";
-import { STUDIO_SPECS, type StudioSpecKey } from "@/domain/catalog";
+import { WEB_DESAIN_TABS, type WebDesainTabKey } from "@/domain/catalog";
+import { SpriteIcon } from "@/components/SpriteIcon";
 
-const SPEC_KEYS: readonly StudioSpecKey[] = ["W", "D", "L", "S"] as const;
+const TAB_KEYS: readonly WebDesainTabKey[] = ["W", "D", "S"] as const;
 
 export default function KeyboardShowcase() {
-  const [activeKey, setActiveKey] = useState<StudioSpecKey>("W");
+  const [activeKey, setActiveKey] = useState<WebDesainTabKey>("W");
+
+  const selectTab = (key: WebDesainTabKey, syncUrl = true) => {
+    setActiveKey(key);
+    if (syncUrl && typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("spec", key);
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const specParam = params.get("spec")?.toUpperCase();
-    if (specParam && SPEC_KEYS.includes(specParam as StudioSpecKey)) {
-      setActiveKey(specParam as StudioSpecKey);
+    if (specParam && TAB_KEYS.includes(specParam as WebDesainTabKey)) {
+      setActiveKey(specParam as WebDesainTabKey);
     }
 
     const onKeyDown = (e: KeyboardEvent) => {
@@ -18,8 +28,8 @@ export default function KeyboardShowcase() {
       if (tag === "input" || tag === "textarea" || tag === "select") return;
       if (e.metaKey || e.ctrlKey || e.altKey) return;
       const upper = e.key.toUpperCase();
-      if (SPEC_KEYS.includes(upper as StudioSpecKey)) {
-        setActiveKey(upper as StudioSpecKey);
+      if (TAB_KEYS.includes(upper as WebDesainTabKey)) {
+        selectTab(upper as WebDesainTabKey);
       }
     };
 
@@ -27,128 +37,87 @@ export default function KeyboardShowcase() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const spec = STUDIO_SPECS[activeKey];
-
   return (
-    <div className="keyboard-showcase">
-      <div className="kb-mobile-tabs" role="tablist" aria-label="Pilih standar kerja">
-        <button
-          type="button"
-          className={`kb-mobile-tab ${activeKey === "W" ? "active-key" : ""}`}
-          onClick={() => setActiveKey("W")}
-        >
-          [W] Web Build
-        </button>
-        <button
-          type="button"
-          className={`kb-mobile-tab ${activeKey === "D" ? "active-key" : ""}`}
-          onClick={() => setActiveKey("D")}
-        >
-          [D] Desain Figma
-        </button>
-        <button
-          type="button"
-          className={`kb-mobile-tab ${activeKey === "L" ? "active-key" : ""}`}
-          onClick={() => setActiveKey("L")}
-        >
-          [L] Aktivasi Lisensi
-        </button>
-        <button
-          type="button"
-          className={`kb-mobile-tab ${activeKey === "S" ? "active-key" : ""}`}
-          onClick={() => setActiveKey("S")}
-        >
-          [S] Support
-        </button>
+    <div className="webdesain-tabs-shell">
+      <div className="webdesain-tab-bar" role="tablist" aria-label="Pilih layanan web dan desain">
+        {WEB_DESAIN_TABS.map((tab) => {
+          const isActive = activeKey === tab.key;
+          return (
+            <button
+              key={tab.key}
+              id={`tab-spec-${tab.key}`}
+              type="button"
+              role="tab"
+              aria-selected={isActive}
+              aria-controls={`panel-spec-${tab.key}`}
+              className={`webdesain-tab-btn ${isActive ? "is-active" : ""}`}
+              onClick={() => selectTab(tab.key)}
+            >
+              <span className="webdesain-tab-key">{tab.key}</span>
+              <span>{tab.tabLabel}</span>
+            </button>
+          );
+        })}
       </div>
 
-      <div className="keyboard-deck" aria-label="Keyboard Interaktif Cara Kerja">
-        <div className="kb-row">
-          <span className="kb-key">ESC</span>
-          <span className="kb-key">1</span>
-          <span className="kb-key">2</span>
-          <span className="kb-key">3</span>
-          <span className="kb-key">4</span>
-          <span className="kb-key">5</span>
-          <span className="kb-key">6</span>
-          <span className="kb-key">7</span>
-          <span className="kb-key">8</span>
-          <span className="kb-key wide">DEL</span>
-        </div>
-        <div className="kb-row">
-          <span className="kb-key wide">TAB</span>
-          <span className="kb-key">Q</span>
-          <button
-            type="button"
-            className={`kb-key lit ${activeKey === "W" ? "active-key" : ""}`}
-            title="Web Development"
-            onClick={() => setActiveKey("W")}
-          >
-            W
-          </button>
-          <span className="kb-key">E</span>
-          <span className="kb-key">R</span>
-          <span className="kb-key">T</span>
-          <span className="kb-key">Y</span>
-          <span className="kb-key">U</span>
-          <span className="kb-key">I</span>
-          <span className="kb-key">O</span>
-        </div>
-        <div className="kb-row">
-          <span className="kb-key wide">CAPS</span>
-          <span className="kb-key">A</span>
-          <button
-            type="button"
-            className={`kb-key lit ${activeKey === "S" ? "active-key" : ""}`}
-            title="Pembayaran & Support"
-            onClick={() => setActiveKey("S")}
-          >
-            S
-          </button>
-          <button
-            type="button"
-            className={`kb-key lit ${activeKey === "D" ? "active-key" : ""}`}
-            title="Desain Figma"
-            onClick={() => setActiveKey("D")}
-          >
-            D
-          </button>
-          <span className="kb-key">F</span>
-          <span className="kb-key">G</span>
-          <span className="kb-key">H</span>
-          <span className="kb-key">J</span>
-          <span className="kb-key">K</span>
-          <button
-            type="button"
-            className={`kb-key lit ${activeKey === "L" ? "active-key" : ""}`}
-            title="Aktivasi Lisensi"
-            onClick={() => setActiveKey("L")}
-          >
-            L
-          </button>
-        </div>
-        <div className="kb-row">
-          <span className="kb-key wide">SHIFT</span>
-          <span className="kb-key">Z</span>
-          <span className="kb-key">X</span>
-          <span className="kb-key">C</span>
-          <span className="kb-key space">IMAJITEK STUDIO</span>
-          <span className="kb-key">&#8984;</span>
-          <span className="kb-key">OPT</span>
-        </div>
-      </div>
+      {WEB_DESAIN_TABS.map((tab) => {
+        const isActive = activeKey === tab.key;
+        const topicHref =
+          tab.key === "D"
+            ? "/hubungi?topic=Desain%20Grafis"
+            : "/hubungi?topic=Pembuatan%20Web%20%26%20Aplikasi";
 
-      <div className="kb-inspector">
-        <span className="kb-badge">{spec.badge}</span>
-        <h3>{spec.title}</h3>
-        <p>{spec.desc}</p>
-        <div className="kb-stat-box">
-          <span style={{ fontSize: "13px", color: "var(--ink-secondary)" }}>
-            {spec.metricLabel}
-          </span>
-          <strong>{spec.metricValue}</strong>
-        </div>
-      </div>
+        return (
+          <div
+            key={tab.key}
+            id={`panel-spec-${tab.key}`}
+            role="tabpanel"
+            aria-labelledby={`tab-spec-${tab.key}`}
+            hidden={!isActive}
+            className="webdesain-panel detail-animate"
+          >
+            <div className="webdesain-panel-head">
+              <span className="kb-badge">{tab.eyebrow}</span>
+              <h2>{tab.heading}</h2>
+              <p>{tab.description}</p>
+            </div>
+
+            <div className="webdesain-points-wrap">
+              <div className="webdesain-points-label">{tab.listHeading}</div>
+              <div
+                className={`webdesain-points-grid ${tab.points.length === 4 ? "is-four" : "is-three"}`}
+              >
+                {tab.points.map((pt, idx) => (
+                  <article key={pt.title} className="webdesain-point-card">
+                    <div className="webdesain-point-head">
+                      <span className="webdesain-point-num tabular">
+                        {tab.listKind === "steps" ? (
+                          String(idx + 1).padStart(2, "0")
+                        ) : (
+                          <SpriteIcon id="ph-check" className="ph-icon ph-icon-xs" />
+                        )}
+                      </span>
+                      <h3>{pt.title}</h3>
+                    </div>
+                    <p>{pt.desc}</p>
+                  </article>
+                ))}
+              </div>
+            </div>
+
+            <div className="webdesain-panel-foot">
+              <span className="webdesain-foot-note">
+                Pintasan keyboard: tekan <strong>W</strong>, <strong>D</strong>, atau{" "}
+                <strong>S</strong> untuk berpindah tab
+              </span>
+              <a className="btn btn-nvidia btn-sm" href={topicHref}>
+                <span>Konsultasikan Kebutuhan Anda</span>
+                <SpriteIcon id="ph-arrow-right" className="ph-icon ph-icon-xs" />
+              </a>
+            </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

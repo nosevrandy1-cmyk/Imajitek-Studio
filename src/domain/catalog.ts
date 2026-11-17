@@ -54,7 +54,7 @@ export const CATALOG_CATEGORIES: readonly CatalogCategoryMeta[] = [
   },
   { id: "ai", label: "AI Tools", hint: "ChatGPT, Claude & Google Gemini resmi" },
   { id: "work", label: "Office & Teknis", hint: "Email kantor, IDE developer & keamanan web" },
-  { id: "services", label: "Jasa Web & Figma", hint: "Pembuatan website, web app & design system" }
+  { id: "services", label: "Web & Desain", hint: "Pembuatan website, aplikasi web & desain grafis" }
 ] as const;
 
 export const CATALOG_ITEMS: readonly CatalogItem[] = [
@@ -228,8 +228,8 @@ export const CATALOG_ITEMS: readonly CatalogItem[] = [
     cat: "services",
     icon: "phd-pen-nib",
     isBrand: false,
-    label: "Jasa Desain UI/UX Figma",
-    sub: "Wireframe + Design System",
+    label: "Jasa Desain Grafis",
+    sub: "Korporat, UMKM & Personal",
     type: "project",
     defaultQty: 1,
     defaultBilling: "Tahunan"
@@ -266,34 +266,131 @@ export const MARQUEE_BOTTOM_ROW: readonly MarqueePill[] = [
   { id: "autodesk", label: "Autodesk Commercial", icon: "brand-autodesk" }
 ] as const;
 
+export interface WebDesainPoint {
+  readonly title: string;
+  readonly desc: string;
+}
+
+export interface WebDesainTab {
+  readonly key: "W" | "D" | "S";
+  readonly tabLabel: string;
+  readonly eyebrow: string;
+  readonly heading: string;
+  readonly description: string;
+  readonly listHeading: string;
+  readonly listKind: "benefits" | "steps";
+  readonly points: readonly WebDesainPoint[];
+}
+
+export const WEB_DESAIN_TABS: readonly WebDesainTab[] = [
+  {
+    key: "W",
+    tabLabel: "Website & Aplikasi Web",
+    eyebrow: "Bagian 1 · Website & Web App",
+    heading: "Website Perusahaan, Landing Page & Aplikasi Web",
+    description:
+      "Kami membangun website yang cepat, aman, dan mudah dikelola—mulai dari halaman profil bisnis, katalog produk UMKM, hingga aplikasi web operasional.",
+    listHeading: "Poin Keunggulan",
+    listKind: "benefits",
+    points: [
+      {
+        title: "Desain Responsif & Cepat",
+        desc: "Tampilan optimal di layar komputer maupun smartphone dengan waktu muat yang ringan."
+      },
+      {
+        title: "Kepemilikan Penuh",
+        desc: "Serah terima lengkap mencakup source code (repositori Git) dan akses penuh ke hosting/server."
+      },
+      {
+        title: "Siap Berkembang",
+        desc: "Struktur kode yang rapi dan mudah dikembangkan sesuai pertumbuhan bisnis Anda."
+      }
+    ]
+  },
+  {
+    key: "D",
+    tabLabel: "Desain Grafis",
+    eyebrow: "Bagian 2 · Desain Grafis",
+    heading: "Desain Grafis Korporat, UMKM & Personal",
+    description:
+      "Layanan perancangan visual profesional untuk berbagai skala kebutuhan—baik untuk standar komunikasi perusahaan, promosi UMKM, maupun proyek personal.",
+    listHeading: "Poin Keunggulan",
+    listKind: "benefits",
+    points: [
+      {
+        title: "Kebutuhan Korporat & Instansi",
+        desc: "Desain company profile, laporan tahunan/proyek, materi presentasi, publikasi, dan aset identitas perusahaan."
+      },
+      {
+        title: "Kebutuhan UMKM & Brand Lokal",
+        desc: "Desain logo, kemasan, katalog produk, poster promosi, hingga konten visual media sosial."
+      },
+      {
+        title: "File Master Siap Pakai",
+        desc: "Seluruh hasil desain diserahkan dalam format siap cetak maupun digital beserta file masternya."
+      }
+    ]
+  },
+  {
+    key: "S",
+    tabLabel: "Standar & Cara Kerja",
+    eyebrow: "Bagian 3 · Standar & Cara Kerja",
+    heading: "Alur Kerja Transparan & Terukur",
+    description:
+      "Proses pengerjaan yang jelas dari diskusi awal hingga serah terima aset, tanpa biaya tersembunyi.",
+    listHeading: "Langkah Kerja",
+    listKind: "steps",
+    points: [
+      {
+        title: "Diskusi & Pemetaan Kebutuhan",
+        desc: "Memahami target, referensi visual, atau spesifikasi teknis yang Anda butuhkan."
+      },
+      {
+        title: "Penawaran & Kesepakatan",
+        desc: "Rincian ruang lingkup kerja, durasi pengerjaan, dan estimasi biaya yang transparan."
+      },
+      {
+        title: "Pengerjaan & Revisi Terarah",
+        desc: "Proses produksi dengan pembaruan berkala dan sesi revisi sesuai kesepakatan."
+      },
+      {
+        title: "Serah Terima Penuh",
+        desc: "Penyerahan hasil akhir beserta kode sumber, akses akun, atau file master desain."
+      }
+    ]
+  }
+] as const;
+
+export type WebDesainTabKey = WebDesainTab["key"];
+
 export const STUDIO_SPECS = {
   W: {
     badge: "Tombol W · Web Development",
-    title: "Kode rapi dan seluruh akses menjadi milik Anda",
-    desc: "Website dibangun tanpa mengunci klien. Setelah selesai, repositori Git, akses hosting, dan panduan pengelolaan halaman langsung kami serahkan.",
+    title: "Website Perusahaan, Landing Page & Aplikasi Web",
+    desc: "Website dibangun cepat, aman, dan mudah dikelola dengan serah terima penuh source code (repositori Git) serta akses penuh ke hosting/server.",
     metricLabel: "Serah Terima",
-    metricValue: "Repositori Git & Panduan"
+    metricValue: "Repositori Git & Akses Server"
   },
   D: {
-    badge: "Tombol D · Desain Figma",
-    title: "File desain terstruktur dan siap dilanjutkan",
-    desc: "Setiap halaman dirancang dengan komponen modular serta token warna dan tipografi di Figma agar siap dilanjutkan ke tahap pengembangan tanpa revisi ulang ukuran.",
+    badge: "Tombol D · Desain Grafis",
+    title: "Desain Grafis Korporat, UMKM & Personal",
+    desc: "Perancangan visual profesional mulai dari company profile, materi presentasi, logo, kemasan, hingga konten digital beserta file master siap pakai.",
     metricLabel: "Hasil Desain",
-    metricValue: "File Figma + Panduan Brand"
+    metricValue: "Format Cetak, Digital & File Master"
   },
   L: {
     badge: "Tombol L · Aktivasi Lisensi",
     title: "Lisensi aktif langsung ke email Anda atau tim",
-    desc: "Pengadaan Adobe Creative Cloud Pro, Canva Pro & Business, Magnific, Envato Elements, hingga ChatGPT, Claude, dan Gemini didaftarkan langsung ke akun resmi milik Anda.",
+    desc: "Pengadaan Adobe Creative Cloud Pro, Canva Pro & Business, Magnific, Envato Elements, hingga ChatGPT, Claude, dan Gemini langsung ke email resmi Anda.",
     metricLabel: "Status Akun",
     metricValue: "Resmi & Non-Sharing"
   },
   S: {
-    badge: "Tombol S · Pembayaran & Support",
-    title: "Satu tagihan Rupiah dan dukungan setelah rilis",
-    desc: "Pembelian beberapa software dapat digabung dalam satu pembayaran transfer Rupiah, lengkap dengan pengingat perpanjangan dan dukungan pembaruan web.",
-    metricLabel: "Metode Bayar",
-    metricValue: "Transfer Bank Rupiah"
+    badge: "Tombol S · Standar & Cara Kerja",
+    title: "Alur Kerja Transparan & Terukur",
+    desc: "Proses pengerjaan yang jelas mulai dari diskusi kebutuhan, penawaran terperinci, revisi terarah, hingga serah terima aset secara penuh.",
+    metricLabel: "Jaminan",
+    metricValue: "Tanpa Biaya Tersembunyi"
   }
 } as const;
 
@@ -324,20 +421,20 @@ export const HOME_FAQ_ITEMS: readonly FaqItem[] = [
       "Tablet estimasi, kalkulator meja, dan catatan perencanaan harga paket lisensi dalam Rupiah"
   },
   {
-    question: "Bisakah gabung proyek web dan lisensi tim?",
+    question: "Bisakah gabung proyek web, desain, dan lisensi?",
     answer:
-      "Bisa. Anda dapat memesan pembuatan website atau desain Figma secara terpisah maupun bersamaan dengan pengadaan software tim dalam satu penawaran.",
+      "Bisa. Anda dapat memesan pembuatan website, jasa desain grafis, maupun pengadaan software tim secara terpisah atau sekaligus dalam satu penawaran.",
     imageSrc: "/images/faq/faq-03.webp",
     imageAlt:
-      "Monitor kerja dengan wireframe tata letak web, laptop, dan buku catatan desain UI/UX studio"
+      "Monitor kerja dengan wireframe tata letak web, laptop, dan buku catatan desain visual studio"
   },
   {
-    question: "Apakah kode dan file Figma jadi milik kami?",
+    question: "Apakah kode dan file master jadi milik kami?",
     answer:
-      "Sepenuhnya milik Anda. Setelah proyek selesai, repositori Git, akses hosting/server, dan file master Figma diserahkan utuh ke akun Anda.",
+      "Sepenuhnya milik Anda. Setelah proyek selesai, repositori Git, akses hosting/server, dan seluruh file master desain diserahkan utuh ke akun Anda.",
     imageSrc: "/images/faq/faq-04.webp",
     imageAlt:
-      "Laptop, keyboard mekanikal, drive arsip, dan folder proyek serah terima kode dan file Figma"
+      "Laptop, keyboard mekanikal, drive arsip, dan folder proyek serah terima kode dan file master desain"
   },
   {
     question: "Bagaimana jika software tidak ada di daftar?",

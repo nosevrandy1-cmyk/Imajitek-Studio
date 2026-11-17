@@ -31,6 +31,9 @@ importers:
       react-dom:
         specifier: ^19.2.4
         version: 19.3.1(react@19.3.1)
+      react-useanimations:
+        specifier: ^3.1.1
+        version: 3.1.1(react@19.3.1)
       zod:
         specifier: ^3.25.76
         version: 3.25.76
@@ -4374,6 +4377,14 @@ packages:
       }
     engines: { node: ">=0.10.0" }
 
+  react-useanimations@3.1.1:
+    resolution:
+      {
+        integrity: sha512-hq5ItlbkHk1ztmAxFvWTMX9ZTpPdT9ZTvRpvoakrdsvDNRtUl6Yf5IUPGxP+bxVidgKXUeDhBioQE8g/8jsYMQ==
+      }
+    peerDependencies:
+      react: ">=18"
+
   react@19.3.1:
     resolution:
       {
@@ -8509,6 +8520,10 @@ snapshots:
       scheduler: 0.28.0
 
   react-refresh@0.17.0: {}
+
+  react-useanimations@3.1.1(react@19.3.1):
+    dependencies:
+      react: 19.3.1
 
   react@19.3.1: {}
 

@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState, type SyntheticEvent } from "react";
+import UseAnimations from "react-useanimations";
+import mail from "react-useanimations/lib/mail";
+import refreshCcw from "react-useanimations/lib/refreshCcw";
 import { COMPANY, buildWhatsAppUrl } from "@/domain/catalog";
 import {
   InquiryRequestSchema,
@@ -35,11 +38,27 @@ declare global {
 }
 
 const TOPICS = [
-  "Website + Desain + Lisensi",
-  "Pembuatan Website / Web App",
-  "Desain UI/UX & Brand",
-  "Pembelian Lisensi Software & AI"
+  "Pembuatan Web & Aplikasi",
+  "Desain Grafis",
+  "Langganan Software & AI",
+  "Gabungan Web, Desain & Software"
 ] as const;
+
+function normalizeTopicParam(raw: string | null): string | null {
+  if (!raw) return null;
+  const trimmed = raw.trim();
+  if ((TOPICS as readonly string[]).includes(trimmed)) return trimmed;
+  const lower = trimmed.toLowerCase();
+  if (lower.includes("lisensi") || lower.includes("software")) {
+    if (lower.includes("website") || lower.includes("web")) {
+      return "Gabungan Web, Desain & Software";
+    }
+    return "Langganan Software & AI";
+  }
+  if (lower.includes("desain")) return "Desain Grafis";
+  if (lower.includes("web")) return "Pembuatan Web & Aplikasi";
+  return null;
+}
 
 const TURNSTILE_SITE_KEY = (import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "").trim();
 
@@ -51,9 +70,8 @@ function randomChallengePair(): { a: number; b: number } {
 
 export default function InquiryForm({ variant }: InquiryFormProps) {
   const [company, setCompany] = useState("");
-  const [whatsapp, setWhatsapp] = useState("");
-  const [email, setEmail] = useState("");
-  const [topic, setTopic] = useState<string>(TOPICS[0]);
+  const [contactValue, setContactValue] = useState("");
+  const [topic, setTopic] = useState<string>("");
   const [notes, setNotes] = useState("");
   const [website, setWebsite] = useState("");
   const [selectedItems, setSelectedItems] = useState<SelectedQuoteItem[]>([]);
@@ -136,8 +154,9 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
         setNotes(detail.notes);
         triggerFlash();
       }
-      if (detail.topic) {
-        setTopic(detail.topic);
+      const mapped = normalizeTopicParam(detail.topic ?? null);
+      if (mapped) {
+        setTopic(mapped);
       }
       if (detail.items) {
         setSelectedItems(detail.items);
@@ -156,9 +175,18 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
     if (quoteRaw) {
       const parsed = parseQuoteSelections(quoteRaw);
       if (parsed) {
-        setSelectedItems(toInquiryItems(parsed));
+        const items = toInquiryItems(parsed);
+        setSelectedItems(items);
         setNotes(buildQuoteNote(parsed));
-        setTopic("Pembelian Lisensi Software & AI");
+        const hasProject = items.some((i) => i.type === "project");
+        const hasLicense = items.some((i) => i.type === "license");
+        setTopic(
+          hasProject && hasLicense
+            ? "Gabungan Web, Desain & Software"
+            : hasProject
+              ? "Pembuatan Web & Aplikasi"
+              : "Langganan Software & AI"
+        );
         triggerFlash();
       }
     } else if (notesParam) {
@@ -166,8 +194,9 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
       triggerFlash();
     }
 
-    if (topicParam) {
-      setTopic(topicParam);
+    const mapped = normalizeTopicParam(topicParam);
+    if (mapped) {
+      setTopic(mapped);
     }
   }, [variant]);
 
@@ -183,14 +212,16 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
   const buildDirectLinks = (data: {
     company: string;
     whatsapp: string;
+    email: string;
     topic: string;
     notes: string;
   }) => {
+    const contactLine = [data.whatsapp, data.email].filter(Boolean).join(" / ");
     const summaryBody = [
       `Halo ${COMPANY.brandName},`,
-      `Nama / Perusahaan: ${data.company}`,
-      `WhatsApp: ${data.whatsapp}`,
-      `Topik: ${data.topic}`,
+      `Nama Lengkap / Instansi: ${data.company}`,
+      `Kontak: ${contactLine}`,
+      `Kategori Kebutuhan: ${data.topic}`,
       "",
       data.notes || "Mohon informasi penawaran & estimasi pengerjaan."
     ].join("\n");
@@ -209,12 +240,15 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
     setToast(null);
 
     const parsedSpamInt = Number.parseInt(spamAnswer.trim(), 10);
+    const trimmedContact = contactValue.trim();
+    const isEmailInput = trimmedContact.includes("@");
+    const effectiveTopic = variant === "contact" ? topic || TOPICS[0] : "Konsultasi Beranda";
 
     const payload = {
       company,
-      whatsapp,
-      email: variant === "contact" ? email : "",
-      topic: variant === "contact" ? topic : "Konsultasi Beranda",
+      whatsapp: isEmailInput ? "" : trimmedContact,
+      email: isEmailInput ? trimmedContact : "",
+      topic: effectiveTopic,
       notes,
       selectedItems,
       source: variant,
@@ -236,6 +270,14 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
     const validated = InquiryRequestSchema.safeParse(payload);
     const extraErrors: Record<string, string> = {};
 
+    if (!trimmedContact) {
+      extraErrors.contact = "Masukkan email atau nomor WhatsApp yang valid.";
+    }
+
+    if (variant === "contact" && !topic) {
+      extraErrors.topic = "Pilih kategori layanan terlebih dahulu.";
+    }
+
     if (TURNSTILE_SITE_KEY) {
       if (!turnstileToken) {
         extraErrors.turnstileToken = "Selesaikan verifikasi Cloudflare Turnstile terlebih dahulu.";
@@ -252,8 +294,9 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
       if (!validated.success) {
         for (const issue of validated.error.issues) {
           const key = issue.path[0] ? String(issue.path[0]) : "_form";
-          if (!nextErrors[key]) {
-            nextErrors[key] = issue.message;
+          const targetKey = key === "whatsapp" || key === "email" ? "contact" : key;
+          if (!nextErrors[targetKey]) {
+            nextErrors[targetKey] = issue.message;
           }
         }
       }
@@ -285,7 +328,11 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
       const data = (await response.json()) as InquiryApiResponse;
       if (!response.ok || !data.ok) {
         if (!data.ok && data.fieldErrors) {
-          setFieldErrors(data.fieldErrors);
+          const mappedErrors: Record<string, string> = {};
+          for (const [k, v] of Object.entries(data.fieldErrors)) {
+            mappedErrors[k === "whatsapp" || k === "email" ? "contact" : k] = v;
+          }
+          setFieldErrors(mappedErrors);
         }
         setToast({
           kind: "error",
@@ -355,81 +402,65 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
 
       <div className="form-grid-2">
         <div className={`field ${fieldErrors.company ? "has-error" : ""}`}>
-          <label htmlFor={`${prefix}-company`}>Nama Anda / Perusahaan</label>
+          <label htmlFor={`${prefix}-company`}>Nama Lengkap / Instansi</label>
           <input
             id={`${prefix}-company`}
             name="company"
             type="text"
             required
-            placeholder="PT Sinar Karya / Andi"
+            placeholder="Contoh: Budi Santoso / PT Maju Bersama"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
           />
           {fieldErrors.company && <span className="field-error">{fieldErrors.company}</span>}
         </div>
 
-        <div className={`field ${fieldErrors.whatsapp ? "has-error" : ""}`}>
-          <label htmlFor={`${prefix}-wa`}>Nomor WhatsApp</label>
+        <div className={`field ${fieldErrors.contact ? "has-error" : ""}`}>
+          <label htmlFor={`${prefix}-contact`}>Email atau Nomor WhatsApp</label>
           <input
-            id={`${prefix}-wa`}
-            name="whatsapp"
+            id={`${prefix}-contact`}
+            name="contact"
             type="text"
             required
-            placeholder="0812-xxxx-xxxx"
-            value={whatsapp}
-            onChange={(e) => setWhatsapp(e.target.value)}
+            placeholder="Contoh: 0812-xxxx-xxxx atau nama@email.com"
+            value={contactValue}
+            onChange={(e) => setContactValue(e.target.value)}
           />
-          {fieldErrors.whatsapp && <span className="field-error">{fieldErrors.whatsapp}</span>}
+          {fieldErrors.contact && <span className="field-error">{fieldErrors.contact}</span>}
         </div>
       </div>
 
       {variant === "contact" && (
-        <div className="form-grid-2">
-          <div className={`field ${fieldErrors.email ? "has-error" : ""}`}>
-            <label htmlFor="rfq-email">Email</label>
-            <input
-              id="rfq-email"
-              name="email"
-              type="email"
-              placeholder="nama@perusahaan.co.id"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {fieldErrors.email && <span className="field-error">{fieldErrors.email}</span>}
-          </div>
-
-          <div className="field">
-            <label htmlFor="rfq-service">Topik Utama</label>
-            <select
-              id="rfq-service"
-              name="topic"
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-            >
-              {TOPICS.map((t) => (
-                <option key={t} value={t}>
-                  {t}
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className={`field ${fieldErrors.topic ? "has-error" : ""}`}>
+          <label htmlFor="rfq-service">Kategori Kebutuhan</label>
+          <select
+            id="rfq-service"
+            name="topic"
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+          >
+            <option value="">
+              Pilih layanan: Pembuatan Web &amp; Aplikasi / Desain Grafis / Langganan Software &amp;
+              AI
+            </option>
+            {TOPICS.map((t) => (
+              <option key={t} value={t}>
+                {t}
+              </option>
+            ))}
+          </select>
+          {fieldErrors.topic && <span className="field-error">{fieldErrors.topic}</span>}
         </div>
       )}
 
       <div className={`field ${fieldErrors.notes ? "has-error" : ""}`}>
-        <label htmlFor={`${prefix}-notes`}>
-          {variant === "home" ? "Rincian Proyek atau Daftar Software" : "Rincian Kebutuhan"}
-        </label>
+        <label htmlFor={`${prefix}-notes`}>Detail Kebutuhan</label>
         <textarea
           id={`${prefix}-notes`}
           name="notes"
           rows={4}
           className={flashNotes ? "field-flash" : ""}
-          placeholder={
-            variant === "home"
-              ? "Misal: 2 Adobe CC Pro, 3 ChatGPT Team, atau konsultasi website perusahaan..."
-              : "Misal: 2 akun Adobe CC Pro, 5 Canva Business, 3 ChatGPT Team, dan website company profile..."
-          }
+          placeholder="Tuliskan gambaran singkat proyek web/desain Anda, atau sebutkan nama software beserta jumlah akun yang ingin dilanggan..."
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           onAnimationEnd={() => setFlashNotes(false)}
@@ -446,15 +477,26 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
             <span>{TURNSTILE_SITE_KEY ? "Verifikasi Keamanan" : "Verifikasi Anti-Spam"}</span>
           </span>
           {!TURNSTILE_SITE_KEY && (
-            <button
-              type="button"
-              className="antispam-refresh"
-              aria-label="Ganti soal verifikasi anti-spam"
-              title="Ganti soal"
-              onClick={refreshChallenge}
-            >
-              <SpriteIcon id="ph-arrows-clockwise" className="ph-icon ph-icon-xs" />
-            </button>
+            <UseAnimations
+              animation={refreshCcw}
+              interaction="click-replay"
+              size={15}
+              render={(eventProps, animationProps) => (
+                <button
+                  type="button"
+                  className="antispam-refresh"
+                  aria-label="Ganti soal verifikasi anti-spam"
+                  title="Ganti soal"
+                  {...eventProps}
+                  onClick={(e) => {
+                    eventProps.onClick(e);
+                    refreshChallenge();
+                  }}
+                >
+                  <span {...animationProps} />
+                </button>
+              )}
+            />
           )}
         </div>
 
@@ -493,24 +535,44 @@ export default function InquiryForm({ variant }: InquiryFormProps) {
         )}
       </div>
 
-      <button
-        type="submit"
-        className={`btn btn-nvidia ${submitting ? "is-loading" : ""}`}
-        style={{ width: "100%" }}
-        disabled={submitting}
-      >
-        {submitting ? (
-          <>
-            <span className="btn-spinner" aria-hidden="true" />
-            <span>Mengirim...</span>
-          </>
-        ) : (
-          <>
-            <SpriteIcon id="ph-envelope" className="ph-icon ph-icon-sm" />
-            <span>{variant === "home" ? "Kirim Permintaan" : "Kirim ke Tim Kami"}</span>
-          </>
-        )}
-      </button>
+      {submitting ? (
+        <button
+          type="submit"
+          className="btn btn-nvidia is-loading"
+          style={{ width: "100%" }}
+          disabled
+        >
+          <span className="btn-spinner" aria-hidden="true" />
+          <span>Mengirim...</span>
+        </button>
+      ) : (
+        <UseAnimations
+          animation={mail}
+          interaction="hover-replay"
+          size={18}
+          render={(eventProps, animationProps) => (
+            <button
+              type="submit"
+              className="btn btn-nvidia"
+              style={{ width: "100%" }}
+              {...eventProps}
+            >
+              <span {...animationProps} />
+              <span>Kirim Permintaan Penawaran</span>
+            </button>
+          )}
+        />
+      )}
+
+      {variant === "contact" && (
+        <p className="rfq-wa-alt">
+          Ingin respons lebih cepat? Hubungi kami langsung melalui{" "}
+          <a href={COMPANY.whatsappUrl} target="_blank" rel="noopener noreferrer">
+            WhatsApp
+          </a>
+          .
+        </p>
+      )}
 
       {toast && (
         <div

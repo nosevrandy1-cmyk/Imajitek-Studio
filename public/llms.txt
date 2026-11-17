@@ -1,12 +1,12 @@
 # Imajitek Studio — PT Imaji Teknologi Bersama
 
-> Imajitek Studio adalah badan usaha resmi Indonesia (PT Imaji Teknologi Bersama) yang menyediakan jasa pembuatan website & aplikasi web, perancangan UI/UX Design System di Figma, serta pengadaan lisensi software kreatif, AI, dan produktivitas tim resmi dengan pembayaran dan invoice Rupiah (IDR).
+> Imajitek Studio adalah badan usaha resmi Indonesia (PT Imaji Teknologi Bersama) yang menyediakan jasa pembuatan website & aplikasi web, layanan desain grafis untuk korporat, UMKM, maupun personal, serta pengadaan langganan software kreatif, desain, dan AI resmi dengan invoice Rupiah (IDR).
 
 ## Layanan Utama
 - [Beranda & Katalog Interaktif](https://imajitek.pages.dev/): Ringkasan layanan studio, katalog pilihan software siap ajukan, dan Tanya Jawab (FAQ).
-- [Web Development & Desain UI/UX Figma](https://imajitek.pages.dev/web-desain): Pembuatan website perusahaan, aplikasi web custom, portal klien, serta perancangan UI/UX & Design System di Figma dengan serah terima penuh repositori Git dan file master.
-- [Katalog Lisensi Software & AI Resmi](https://imajitek.pages.dev/software): Pengadaan lisensi Adobe Creative Cloud Pro (Photoshop, Illustrator, Premiere Pro, After Effects, InDesign, Acrobat Pro), Canva Pro & Business, Magnific AI, Envato Elements, Figma Organization, Autodesk (AutoCAD/Revit), ChatGPT Plus & Team, Claude Pro & Team, Google Gemini, Microsoft 365 Business, Google Workspace, JetBrains All Products, GitHub Team, dan Cloudflare Business.
-- [Info Pembelian & Hubungi Kami](https://imajitek.pages.dev/hubungi): Konsultasi kebutuhan dan permintaan penawaran resmi dalam Rupiah.
+- [Layanan Web & Desain](https://imajitek.pages.dev/web-desain): Pembuatan website company profile, landing page, aplikasi web custom, serta layanan desain grafis korporat, UMKM, dan personal dengan serah terima penuh repositori kode dan file master.
+- [Katalog Software & AI Resmi](https://imajitek.pages.dev/software): Pengadaan lisensi Adobe Creative Cloud Pro (Photoshop, Illustrator, Premiere Pro, After Effects, InDesign, Acrobat Pro), Canva Pro & Business, Magnific AI, Envato Elements, Figma Organization, Autodesk (AutoCAD/Revit), ChatGPT Plus & Team, Claude Pro & Team, Google Gemini, Microsoft 365 Business, Google Workspace, JetBrains All Products, GitHub Team, dan Cloudflare Business.
+- [Info & Hubungi Kami](https://imajitek.pages.dev/hubungi): Konsultasi kebutuhan web, desain grafis, atau langganan software resmi.
 
 ## Fakta Inti Perusahaan
 - Nama Merek: Imajitek Studio

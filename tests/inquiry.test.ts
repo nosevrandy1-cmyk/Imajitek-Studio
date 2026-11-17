@@ -95,6 +95,26 @@ describe("Cloudflare Pages Edge Functions", () => {
     expect(json.fieldErrors?.spamChallenge).toBeDefined();
   });
 
+  it("accepts email-only contact when whatsapp is omitted under unified Email or WA flow", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ id: "re_email_only" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      })
+    );
+    const req = makeJsonRequest({
+      company: "Budi Santoso / PT Maju Bersama",
+      email: "budi@majubersama.co.id",
+      topic: "Desain Grafis",
+      notes: "Butuh desain company profile 16 halaman.",
+      source: "contact",
+      formStartedAt: Date.now() - 5000,
+      spamChallenge: { a: 5, b: 3, answer: 8 }
+    });
+    const res = await handleInquiryRequest(req, { RESEND_API_KEY: "re_live_mock" });
+    expect(res.status).toBe(201);
+  });
+
   it("dispatches email to imajistudio.id@gmail.com via Resend when RESEND_API_KEY is configured", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ id: "re_test_123" }), {

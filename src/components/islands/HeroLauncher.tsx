@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from "react";
 import { AnimatePresence, MotionConfig, motion } from "motion/react";
+import UseAnimations from "react-useanimations";
+import searchToX from "react-useanimations/lib/searchToX";
 import { CATALOG_CATEGORIES, CATALOG_ITEMS, type CatalogItem } from "@/domain/catalog";
 import { SpriteIcon } from "@/components/SpriteIcon";
 import { dispatchCatalogCustom, dispatchCatalogPick } from "@/lib/events";
@@ -96,7 +98,12 @@ export default function HeroLauncher() {
         transition={{ type: "spring", stiffness: 250, damping: 24, delay: 0.06 }}
       >
         <div className={`hero-search-bar ${showDropdown ? "is-open" : ""}`}>
-          <SpriteIcon id="ph-magnifying-glass" className="ph-icon hero-search-icon" />
+          <UseAnimations
+            animation={searchToX}
+            interaction="hover-replay"
+            size={20}
+            className="hero-search-icon"
+          />
           <input
             id="launcher-search"
             className="hero-search-input"
