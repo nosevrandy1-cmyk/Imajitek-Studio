@@ -1,0 +1,37 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import CatalogBuilder from "@/components/islands/CatalogBuilder";
+import ScenariosSwitcher from "@/components/islands/ScenariosSwitcher";
+---
+
+<BaseLayout
+  title="Katalog Software & AI Resmi | Imajitek Studio"
+  description="Pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva Business, Magnific, Envato Elements, Figma, ChatGPT Team, Claude Team, dan Google Gemini dengan pembayaran Rupiah."
+  canonicalPath="/software"
+>
+  <div class="view-header">
+    <div>
+      <div class="view-breadcrumb">
+        <a href="/">Beranda</a>
+        <span>/</span>
+        <span>Katalog Software &amp; AI</span>
+      </div>
+      <h1>Lisensi Software Kreatif, AI &amp; Tim</h1>
+      <p>
+        Pilih software yang Anda butuhkan dan atur jumlah akun masing-masing. Kami siapkan penawaran
+        harga fix dalam Rupiah sesuai kurs berjalan dan paket pilihan Anda.
+      </p>
+    </div>
+    <a class="btn btn-nvidia" href="/hubungi?topic=Pembelian%20Lisensi%20Software%20%26%20AI">
+      <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+        <use href="#ph-whatsapp-logo"></use>
+      </svg>
+      <span>Minta Penawaran Resmi</span>
+    </a>
+  </div>
+
+  <section class="section-compact">
+    <CatalogBuilder mode="contact" client:load />
+    <ScenariosSwitcher client:visible />
+  </section>
+</BaseLayout>

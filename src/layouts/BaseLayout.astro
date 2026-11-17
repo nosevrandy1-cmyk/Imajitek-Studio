@@ -1,0 +1,83 @@
+---
+import "@fontsource/plus-jakarta-sans/400.css";
+import "@fontsource/plus-jakarta-sans/500.css";
+import "@fontsource/plus-jakarta-sans/600.css";
+import "@fontsource/plus-jakarta-sans/700.css";
+import "@fontsource/plus-jakarta-sans/800.css";
+import "@fontsource/jetbrains-mono/400.css";
+import "@fontsource/jetbrains-mono/600.css";
+
+import "@/styles/tokens.css";
+import "@/styles/base.css";
+import "@/styles/components.css";
+
+import { COMPANY } from "@/domain/catalog";
+import IconSprite from "@/components/IconSprite.astro";
+import Navbar from "@/components/Navbar.astro";
+import Footer from "@/components/Footer.astro";
+import CommandPalette from "@/components/islands/CommandPalette";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  canonicalPath?: string;
+}
+
+const {
+  title = `${COMPANY.brandName} | ${COMPANY.legalName}`,
+  description = "Imajitek Studio (PT Imaji Teknologi Bersama) mengerjakan pembuatan website, desain UI/UX di Figma, dan pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva, Magnific, Envato Elements, ChatGPT, Claude, dan Gemini.",
+  canonicalPath = "/"
+} = Astro.props;
+
+const canonicalUrl = new URL(canonicalPath, COMPANY.siteUrl).toString();
+const organizationJsonLd = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  name: COMPANY.brandName,
+  legalName: COMPANY.legalName,
+  url: COMPANY.siteUrl,
+  email: COMPANY.email,
+  telephone: `+${COMPANY.whatsappE164}`,
+  address: {
+    "@type": "PostalAddress",
+    streetAddress: COMPANY.address,
+    addressCountry: "ID"
+  },
+  hasMap: COMPANY.mapsUrl
+});
+---
+
+<!doctype html>
+<html lang="id" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl} />
+    <link rel="icon" type="image/png" href="/logo-itb-green.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:site_name" content={COMPANY.brandName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <script type="application/ld+json" set:html={organizationJsonLd} />
+  </head>
+  <body id="top">
+    <a class="skip-link" href="#main-content">Langsung ke konten utama</a>
+    <IconSprite />
+    <Navbar currentPath={Astro.url.pathname} />
+
+    <main id="main-content" class="container">
+      <slot />
+    </main>
+
+    <Footer />
+    <CommandPalette client:idle />
+  </body>
+</html>

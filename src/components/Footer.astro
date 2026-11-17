@@ -1,0 +1,85 @@
+---
+import { COMPANY } from "@/domain/catalog";
+---
+
+<footer class="site-footer">
+  <div class="footer-wrap">
+    <div class="footer-grid">
+      <div class="footer-brand-col">
+        <a class="brand" href="/" aria-label="Kembali ke Beranda">
+          <img src="/logo-itb-green.png" alt="Logo Imajitek Studio" class="brand-logo" />
+          <span>{COMPANY.legalName}</span>
+        </a>
+        <p>
+          Studio web development, desain produk di Figma, dan pengadaan lisensi software kreatif
+          &amp; AI resmi untuk kebutuhan personal maupun tim perusahaan.
+        </p>
+        <div class="footer-contact-links">
+          <a
+            class="footer-contact-pill"
+            href={COMPANY.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+              <use href="#ph-whatsapp-logo"></use>
+            </svg>
+            <span>{COMPANY.whatsappDisplay}</span>
+          </a>
+          <a class="footer-contact-pill" href={`mailto:${COMPANY.email}`}>
+            <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+              <use href="#ph-envelope"></use>
+            </svg>
+            <span>{COMPANY.email}</span>
+          </a>
+          <a
+            class="footer-contact-pill"
+            href={COMPANY.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+              <use href="#ph-map-pin"></use>
+            </svg>
+            <span>{COMPANY.address}</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Layanan</h4>
+        <ul class="footer-links">
+          <li><a href="/web-desain?spec=W">Website Company Profile</a></li>
+          <li><a href="/web-desain?spec=W">Portal &amp; Aplikasi Web</a></li>
+          <li><a href="/web-desain?spec=D">Desain UI/UX Figma</a></li>
+          <li><a href="/web-desain?spec=S">Standar &amp; Cara Kerja</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Software &amp; AI</h4>
+        <ul class="footer-links">
+          <li><a href="/software?cat=creative&pick=adobe-cc">Adobe Creative Cloud Pro</a></li>
+          <li><a href="/software?cat=creative&pick=canva">Canva Pro &amp; Business</a></li>
+          <li><a href="/software?cat=creative&pick=magnific">Magnific &amp; Envato Elements</a></li>
+          <li><a href="/software?cat=ai&pick=chatgpt">ChatGPT, Claude &amp; Gemini</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navigasi</h4>
+        <ul class="footer-links">
+          <li><a href="/">Beranda</a></li>
+          <li><a href="/web-desain">Web &amp; Desain</a></li>
+          <li><a href="/software">Katalog Software</a></li>
+          <li><a href="/hubungi">Info &amp; Minta Penawaran</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>&copy; {COMPANY.copyrightYear} {COMPANY.legalName}. Seluruh hak cipta dilindungi.</span>
+      <span>{COMPANY.brandName} · {COMPANY.address}</span>
+    </div>
+  </div>
+</footer>

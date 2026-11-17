@@ -1,0 +1,122 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import HeroLauncher from "@/components/islands/HeroLauncher";
+import ServiceShowcase from "@/components/islands/ServiceShowcase";
+import CatalogBuilder from "@/components/islands/CatalogBuilder";
+import OrderHookSection from "@/components/islands/OrderHookSection";
+import FaqAccordion from "@/components/islands/FaqAccordion";
+import InquiryForm from "@/components/islands/InquiryForm";
+import { COMPANY } from "@/domain/catalog";
+---
+
+<BaseLayout
+  title="Imajitek Studio | PT Imaji Teknologi Bersama"
+  description="Imajitek Studio (PT Imaji Teknologi Bersama) mengerjakan pembuatan website, desain UI/UX di Figma, dan pengadaan lisensi resmi Adobe Creative Cloud Pro, Canva, Magnific, Envato Elements, ChatGPT, Claude, dan Gemini."
+  canonicalPath="/"
+>
+  <section class="hero">
+    <h1 class="hero-title">
+      Pembuatan web, desain produk, dan <span class="hl">lisensi software resmi</span>.
+    </h1>
+    <p class="hero-sub">
+      Kami mengerjakan website dan aplikasi web, desain antarmuka di Figma, serta bantu pembelian
+      lisensi software kreatif dan AI resmi dengan pembayaran Rupiah.
+    </p>
+    <div class="hero-ctas">
+      <button type="button" class="btn btn-nvidia" id="hero-inquire-btn">
+        <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+          <use href="#ph-whatsapp-logo"></use>
+        </svg>
+        <span>Kirim Pesan Kebutuhan</span>
+      </button>
+      <a class="btn btn-glass" href="#home-catalog">Cek Katalog Software</a>
+    </div>
+
+    <HeroLauncher client:load />
+  </section>
+
+  <section class="section">
+    <div class="section-head">
+      <h2 class="section-title">Pilih layanan yang ingin Anda eksplor</h2>
+      <p class="section-desc">
+        Klik salah satu fokus layanan di kiri untuk melihat detail hasil kerja kami, lalu tanyakan
+        langsung kebutuhannya.
+      </p>
+    </div>
+
+    <ServiceShowcase client:visible />
+  </section>
+
+  <section class="section section-divider" id="home-catalog">
+    <div class="section-head">
+      <h2 class="section-title">Katalog software resmi &amp; layanan siap pesan</h2>
+      <p class="section-desc">
+        Klik logo atau pilih per kategori, atur jumlah akun masing-masing software, lalu kirim
+        daftar ke formulir penawaran di bawah.
+      </p>
+    </div>
+
+    <CatalogBuilder mode="home" client:visible />
+  </section>
+
+  <section class="section-compact order-hook-band" id="home-order-hook">
+    <OrderHookSection client:visible />
+  </section>
+
+  <section class="section section-divider" id="home-inquiry">
+    <div class="home-engage-grid">
+      <div>
+        <div class="section-head align-left" style="margin-bottom:20px;">
+          <h2 class="section-title">Pertanyaan yang sering ditanyakan</h2>
+          <p class="section-desc">Klik pertanyaan untuk membuka detailnya.</p>
+        </div>
+        <FaqAccordion client:visible />
+
+        <div class="contact-direct-bar" aria-label="Kontak Langsung Imajitek Studio">
+          <a
+            class="contact-direct-pill"
+            href={COMPANY.whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+              <use href="#ph-whatsapp-logo"></use>
+            </svg>
+            <span>{COMPANY.whatsappDisplay}</span>
+          </a>
+          <a class="contact-direct-pill" href={`mailto:${COMPANY.email}`}>
+            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+              <use href="#ph-envelope"></use>
+            </svg>
+            <span>{COMPANY.email}</span>
+          </a>
+          <a
+            class="contact-direct-pill"
+            href={COMPANY.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+              <use href="#ph-map-pin"></use>
+            </svg>
+            <span>{COMPANY.address}</span>
+          </a>
+        </div>
+      </div>
+
+      <InquiryForm variant="home" client:visible />
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { dispatchInquiryPrefill } from "@/lib/events";
+
+  document.getElementById("hero-inquire-btn")?.addEventListener("click", () => {
+    dispatchInquiryPrefill({
+      notes:
+        "Halo Imajitek Studio, saya ingin berdiskusi tentang kebutuhan website, desain, atau lisensi software.",
+      scrollToId: "home-inquiry"
+    });
+  });
+</script>

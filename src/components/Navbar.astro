@@ -1,0 +1,295 @@
+---
+export interface NavbarProps {
+  currentPath: string;
+}
+
+const isHome = Astro.props.currentPath === "/";
+const isStudio = Astro.props.currentPath.startsWith("/web-desain");
+const isSoftware = Astro.props.currentPath.startsWith("/software");
+const isContact = Astro.props.currentPath.startsWith("/hubungi");
+const waTarget = isHome ? "#home-inquiry" : "/hubungi";
+---
+
+<div class="nav-wrapper" id="nav-wrapper">
+  <header class="floating-nav">
+    <a class="brand" href="/" aria-label="Beranda Imajitek Studio">
+      <img src="/logo-itb-green.png" alt="Logo Imajitek Studio" class="brand-logo" />
+      <span>Imajitek Studio</span>
+    </a>
+
+    <nav class="nav-links" id="nav-links" aria-label="Navigasi Utama">
+      <a href="/" class:list={["nav-item-link", { "is-active": isHome }]}>Beranda</a>
+
+      <div class="nav-dropdown" data-dropdown="layanan">
+        <button
+          type="button"
+          class:list={["nav-drop-btn", { "is-active": isStudio }]}
+          aria-expanded="false"
+          aria-controls="mega-layanan"
+        >
+          <span>Layanan</span>
+          <svg class="ph-icon ph-icon-xs nav-drop-caret" aria-hidden="true">
+            <use href="#ph-caret-down"></use>
+          </svg>
+        </button>
+        <div class="mega-menu" id="mega-layanan" role="region" aria-label="Menu Layanan">
+          <div class="mega-grid">
+            <div>
+              <div class="mega-col-title">Jasa Pembuatan &amp; Desain</div>
+              <div class="mega-list">
+                <a class="mega-item" href="/web-desain?spec=W">
+                  <span class="mega-item-icon">
+                    <svg class="ph-icon" aria-hidden="true"><use href="#phd-code"></use></svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Website Perusahaan &amp; Landing Page</strong>
+                    <span>Tampilan rapi di desktop dan HP dengan akses penuh repositori Git.</span>
+                  </span>
+                </a>
+                <a class="mega-item" href="/web-desain?spec=D">
+                  <span class="mega-item-icon">
+                    <svg class="ph-icon" aria-hidden="true"><use href="#phd-pen-nib"></use></svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Desain UI/UX &amp; Design System Figma</strong>
+                    <span>Wireframe, prototipe klik-able, dan komponen modular siap coding.</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div class="mega-featured">
+              <div>
+                <h4>Kode &amp; desain penuh milik Anda</h4>
+                <p>
+                  Setiap proyek web dan UI/UX diserahkan lengkap dengan repositori Git, akses
+                  server, dan file master Figma.
+                </p>
+              </div>
+              <a class="btn btn-glass btn-sm" href="/web-desain" style="width:100%;">
+                <span>Lihat Standar Kerja</span>
+                <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+                  <use href="#ph-arrow-right"></use>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="nav-dropdown" data-dropdown="software">
+        <button
+          type="button"
+          class:list={["nav-drop-btn", { "is-active": isSoftware }]}
+          aria-expanded="false"
+          aria-controls="mega-software"
+        >
+          <span>Software &amp; AI</span>
+          <svg class="ph-icon ph-icon-xs nav-drop-caret" aria-hidden="true">
+            <use href="#ph-caret-down"></use>
+          </svg>
+        </button>
+        <div class="mega-menu" id="mega-software" role="region" aria-label="Menu Software dan AI">
+          <div class="mega-grid two-cols">
+            <div>
+              <div class="mega-col-title">Desain, Aset &amp; Kreatif</div>
+              <div class="mega-list">
+                <a class="mega-item" href="/software?cat=creative&pick=adobe-cc">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-adobe-cc"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Adobe Creative Cloud Pro</strong>
+                    <span>All Apps resmi untuk desainer &amp; tim konten.</span>
+                  </span>
+                </a>
+                <a class="mega-item" href="/software?cat=creative&pick=canva">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-canva"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Canva Pro &amp; Business</strong>
+                    <span>Brand kit dan kolaborasi desain tim.</span>
+                  </span>
+                </a>
+                <a class="mega-item" href="/software?cat=creative&pick=magnific">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-magnific"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Magnific &amp; Envato Elements</strong>
+                    <span>AI image upscaler, template, video stok &amp; font.</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+            <div>
+              <div class="mega-col-title">AI Workspace &amp; Produktivitas</div>
+              <div class="mega-list">
+                <a class="mega-item" href="/software?cat=ai&pick=chatgpt">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-chatgpt"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>ChatGPT Plus &amp; Team</strong>
+                    <span>Ruang kerja OpenAI resmi langsung ke email tim.</span>
+                  </span>
+                </a>
+                <a class="mega-item" href="/software?cat=ai&pick=claude">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-claude"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Claude Pro &amp; Google Gemini</strong>
+                    <span>Asisten AI Anthropic &amp; Google Workspace resmi.</span>
+                  </span>
+                </a>
+                <a class="mega-item" href="/software?cat=work&pick=m365">
+                  <span class="mega-item-icon">
+                    <svg class="brand-svg brand-svg-sm" aria-hidden="true">
+                      <use href="#brand-microsoft"></use>
+                    </svg>
+                  </span>
+                  <span class="mega-item-text">
+                    <strong>Microsoft 365, GitHub &amp; JetBrains</strong>
+                    <span>Email domain kantor dan lisensi developer.</span>
+                  </span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="mega-footer-bar">
+            <span>Aktivasi langsung ke email Anda · Transfer Rupiah</span>
+            <a class="bento-action-link" href="/software">
+              <span>Buka Katalog Lengkap</span>
+              <svg class="ph-icon ph-icon-xs" aria-hidden="true">
+                <use href="#ph-arrow-right"></use>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <a href="/hubungi" class:list={["nav-item-link", { "is-active": isContact }]}
+        >Info &amp; Kontak</a
+      >
+    </nav>
+
+    <div class="nav-actions">
+      <a
+        href={waTarget}
+        class="btn btn-nvidia btn-sm nav-cta-btn"
+        aria-label="Hubungi Kami via WhatsApp"
+        title="Hubungi Kami via WhatsApp"
+      >
+        <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+          <use href="#ph-whatsapp-logo"></use>
+        </svg>
+        <span class="nav-cta-text">Hubungi Kami</span>
+      </a>
+      <button
+        type="button"
+        class="mobile-toggle"
+        id="mobile-toggle"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+        aria-controls="nav-links"
+      >
+        <svg class="ph-icon" aria-hidden="true"><use href="#ph-list"></use></svg>
+      </button>
+    </div>
+  </header>
+</div>
+
+<script>
+  const navWrapper = document.getElementById("nav-wrapper");
+  const navLinks = document.getElementById("nav-links");
+  const mobileToggle = document.getElementById("mobile-toggle");
+  const dropdowns = document.querySelectorAll<HTMLElement>(".nav-dropdown");
+  let closeTimer: number | undefined;
+
+  const updateNavOnScroll = () => {
+    navWrapper?.classList.toggle("is-scrolled", window.scrollY > 36);
+  };
+  window.addEventListener("scroll", updateNavOnScroll, { passive: true });
+  updateNavOnScroll();
+
+  const closeAllDropdowns = () => {
+    dropdowns.forEach((dd) => {
+      dd.classList.remove("open");
+      dd.querySelector(".nav-drop-btn")?.setAttribute("aria-expanded", "false");
+    });
+  };
+
+  dropdowns.forEach((dd) => {
+    const btn = dd.querySelector<HTMLButtonElement>(".nav-drop-btn");
+    let hoverOpenedAt = 0;
+
+    btn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const isOpen = dd.classList.contains("open");
+      if (window.innerWidth > 760 && isOpen && Date.now() - hoverOpenedAt < 400) {
+        return;
+      }
+      const willOpen = !isOpen;
+      closeAllDropdowns();
+      if (willOpen) {
+        dd.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+      }
+    });
+
+    dd.addEventListener("mouseenter", () => {
+      if (window.innerWidth <= 760) return;
+      if (closeTimer) window.clearTimeout(closeTimer);
+      const wasOpen = dd.classList.contains("open");
+      closeAllDropdowns();
+      dd.classList.add("open");
+      btn?.setAttribute("aria-expanded", "true");
+      if (!wasOpen) hoverOpenedAt = Date.now();
+    });
+
+    dd.addEventListener("mouseleave", () => {
+      if (window.innerWidth <= 760) return;
+      closeTimer = window.setTimeout(() => {
+        dd.classList.remove("open");
+        btn?.setAttribute("aria-expanded", "false");
+      }, 140);
+    });
+  });
+
+  mobileToggle?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const next = !navLinks?.classList.contains("open");
+    navLinks?.classList.toggle("open", next);
+    mobileToggle.setAttribute("aria-expanded", String(next));
+  });
+
+  document.addEventListener("click", (e) => {
+    const target = e.target as HTMLElement | null;
+    if (!target?.closest(".nav-dropdown")) {
+      closeAllDropdowns();
+    }
+    if (!target?.closest(".floating-nav")) {
+      navLinks?.classList.remove("open");
+      mobileToggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeAllDropdowns();
+      navLinks?.classList.remove("open");
+      mobileToggle?.setAttribute("aria-expanded", "false");
+    }
+  });
+</script>

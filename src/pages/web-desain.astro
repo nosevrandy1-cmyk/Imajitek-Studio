@@ -1,0 +1,76 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import KeyboardShowcase from "@/components/islands/KeyboardShowcase";
+---
+
+<BaseLayout
+  title="Web Development & Desain UI/UX | Imajitek Studio"
+  description="Jasa pembuatan website perusahaan, aplikasi web khusus, dan desain UI/UX Design System di Figma dengan serah terima penuh repositori Git dan file master."
+  canonicalPath="/web-desain"
+>
+  <div class="view-header">
+    <div>
+      <div class="view-breadcrumb">
+        <a href="/">Beranda</a>
+        <span>/</span>
+        <span>Web &amp; Desain</span>
+      </div>
+      <h1>Web Development &amp; Desain UI/UX</h1>
+      <p>
+        Pengerjaan website perusahaan, aplikasi web khusus, hingga design system Figma yang
+        terstruktur dan sepenuhnya menjadi milik Anda.
+      </p>
+    </div>
+    <a class="btn btn-nvidia" href="/hubungi?topic=Pembuatan%20Website%20%2F%20Web%20App">
+      <svg class="ph-icon ph-icon-sm" aria-hidden="true">
+        <use href="#ph-whatsapp-logo"></use>
+      </svg>
+      <span>Diskusikan Proyek</span>
+    </a>
+  </div>
+
+  <section class="section-compact">
+    <div class="faq-grid" style="margin-top:0;margin-bottom:44px;">
+      <article class="faq-card">
+        <div class="faq-card-head">
+          <svg class="ph-icon ph-icon-lg" aria-hidden="true"><use href="#phd-code"></use></svg>
+          <h3>Website &amp; Landing Page</h3>
+        </div>
+        <p>
+          Halaman profil perusahaan, katalog produk, atau kampanye pemasaran yang responsif, cepat
+          dimuat, dan mudah diedit sendiri melalui CMS.
+        </p>
+      </article>
+      <article class="faq-card">
+        <div class="faq-card-head">
+          <svg class="ph-icon ph-icon-lg" aria-hidden="true"><use href="#ph-terminal"></use></svg>
+          <h3>Portal &amp; Aplikasi Web</h3>
+        </div>
+        <p>
+          Sistem operasional, portal klien, atau dashboard internal dengan otorisasi peran pengguna,
+          integrasi API, dan manajemen data terstruktur.
+        </p>
+      </article>
+      <article class="faq-card">
+        <div class="faq-card-head">
+          <svg class="brand-svg" aria-hidden="true"><use href="#brand-figma"></use></svg>
+          <h3>Desain UI/UX di Figma</h3>
+        </div>
+        <p>
+          Perancangan alur pengguna, antarmuka final, komponen Auto Layout, variabel warna/teks,
+          serta prototipe interaktif sebelum tahap coding.
+        </p>
+      </article>
+    </div>
+
+    <div class="section-head align-left" style="margin-bottom:20px;">
+      <h2 class="section-title" style="margin-bottom:6px;">Hal praktis yang selalu kami jaga</h2>
+      <p class="section-desc">
+        Pilih tombol <strong>W</strong>, <strong>D</strong>, <strong>L</strong>, atau{" "}
+        <strong>S</strong> untuk melihat standar kerja kami.
+      </p>
+    </div>
+
+    <KeyboardShowcase client:load />
+  </section>
+</BaseLayout>
